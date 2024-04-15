@@ -129,10 +129,12 @@ on shoot:
         make the shooter ride the projectile
 on block physics:
     if {physics} is "false":
-        cancel event
+        if event-world is not "lavarising" or "blockshuffle":
+            cancel event
 on block trample:
     if {physics} is "false":
-        cancel event
+        if event-world is not "lavarising" or "blockshuffle":
+            cancel event
 on projectile hit:
     wait 1 tick
     kill projectile
@@ -179,7 +181,8 @@ command /minimsgtest:
         send mini message from "<gradient:##cd00fb:##fb00fb>⊰JakeDot⊱"
 on break:
     if {build} is "false":
-        cancel event
+        if event-world is not "lavarising" or "blockshuffle":
+            cancel event
 on block break:
     if all:
         event-world is "lavarising"
@@ -190,28 +193,19 @@ on block break:
             clear drops
             drop {randomdrop::%type of event-block%}
         else:
-            set {randomdrop::%type of event-block%} to random element out of all items
-            if "%{randomdrop::%type of event-block%}%" contains "cake" or "potted" or "lava cauldron" or "water" or "stem" or "piston head" or "wall" or "cave vines" or "gateway":
-                if "%{randomdrop::%type of event-block%}%" contains "cake" or "potted" or "lava cauldron" or "water" or "stem" or "piston head" or "wall" or "cave vines" or "gateway":
-                    if "%{randomdrop::%type of event-block%}%" contains "cake" or "potted" or "lava cauldron" or "water" or "stem" or "piston head" or "wall" or "cave vines" or "gateway":
-                        if "%{randomdrop::%type of event-block%}%" contains "cake" or "potted" or "lava cauldron" or "water" or "stem" or "piston head" or "wall" or "cave vines" or "gateway":
-                            set {randomdrop::%type of event-block%} to random element out of all items
-                            clear drops
-                            drop {randomdrop::%type of event-block%}
-                        else:
-                            clear drops
-                            drop {randomdrop::%type of event-block%}
-                    else:
-                        clear drops
-                        drop {randomdrop::%type of event-block%}
-                else:
-                    clear drops
-                    drop {randomdrop::%type of event-block%}
-            else:
-                clear drops
-                drop {randomdrop::%type of event-block%}
+            set {randomdrop::%type of event-block%} to random element out of {allitems::*}
+            clear drops
+            drop {randomdrop::%type of event-block%}
     if {build} is "false":
-        cancel event
+        if event-world is not "lavarising" or "blockshuffle":
+            cancel event
 on flow:
     if {flowing} is "false":  
-        cancel event
+        if event-world is not "lavarising" or "blockshuffle":
+            cancel event
+command /randomdrop-loop-debug <text>:
+    trigger:
+        loop {allitems::*}:
+            if "%loop-value%" contains arg 1:
+                remove loop-value from {allitems::*}
+                send "removed %loop-value% from all items"

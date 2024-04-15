@@ -37,6 +37,14 @@ on inventory click:
                 set slot 12 of player's current inventory to grass block named "&6Default"
                 set slot 14 of player's current inventory to stone named "&6Amplified"
                 set slot 26 of player's current inventory to red carpet named "&cExit"
+        if event-slot is a grass block named "&ABlockShuffle":
+            open chest inventory with 3 rows named "BlockShuffle" to player
+            loop 27 times:
+                set slot loop-value - 1 of player's current inventory to gray stained glass pane named " "
+            set slot 12 of player's current inventory to grass block named "&6Default"
+            set slot 14 of player's current inventory to stone named "&6Amplified"
+            set slot 26 of player's current inventory to red carpet named "&cExit"
+            
     if name of event-inventory is "LavaRising Settings":
         cancel event
         if event-slot is a lava bucket named "&6LavaHeight":

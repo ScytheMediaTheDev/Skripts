@@ -139,7 +139,7 @@ command /game <text> [<text>]:
             loop 27 times:
                 set slot loop-value - 1 of player's current inventory to gray stained glass pane named " "
             set slot 13 of player's current inventory to lava bucket named "&6LavaRising"
-            set slot 14 of player's current inventory to grass block named "BlockShuffle"
+            set slot 14 of player's current inventory to grass block named "&ABlockShuffle"
             set slot 26 of player's current inventory to red carpet named "&cExit"
             if player is an op:
                 cancel cooldown

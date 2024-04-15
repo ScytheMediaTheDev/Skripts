@@ -192,3 +192,9 @@ command /ciall:
     permission message: {@noperm}
     trigger:
         clear all players' inventory
+command /noon:
+    permission: potatoevents.time
+    permission message: {@noperm}
+    aliases: /day
+    trigger:
+        set time to 12:00
