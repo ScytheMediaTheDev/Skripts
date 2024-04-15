@@ -1,0 +1,217 @@
+options:
+    prefix: &3Event&8 >
+    noperm: &cYou do not have permission!
+    owner: <gradient:##fc0703:##fc7f03><bold>Owner</bold>
+    jamie: <gradient:##fc0703:##fc7f03><bold>[Jamie]</bold> <reset><red>
+    coowner: <gradient:##00ddfb:##00ff1a><bold>Co-Owner</bold>
+    admin: <gradient:##2B00FF:##00FFE5><bold>Admin</bold>
+    default: <gray><bold>Member<reset><gray> 
+
+on chat:
+    if player is an op:
+        set {_s} to the first character of the message
+        if {_s} contains "!":
+            cancel event
+    if player has permission "potatoevents.emojis":
+        if message contains ":skull:":
+            replace all ":skull:" with "☠" in message
+        if message contains ":heart:" or "<3":
+            replace all ":heart:" or "<3" with "&c❤&r" in message
+        if message contains ":amog:" or ":amogus:" or ":among:" or ":amongus:":
+            replace all ":amog:" or ":amogus:" or ":among:" or ":amongus:" with "ඞ" in message
+        if message contains ":pdl:":
+            replace all ":pdl:" with "😶" in message
+    if player has permission "potatoevents.staffchat":
+        set {_s} to the first character of the message
+        if {_s} contains "##":
+            cancel event
+            set {_ss} to message
+            set {_ss} to last (length of {_ss} - 1) characters of {_ss} 
+            send "&6StaffChat %player%: %{_ss}%" to all ops
+    if {Globalchat} is true:
+        if player has permission "potatoevents.chatmutebypass":
+            stop trigger
+        else:
+            cancel event
+            send actionbar "&cThe Chat is currently muted!"
+            play sound "minecraft:block.note_block.bass"
+    if player's group is "Owner":
+        set {_m} to mini message from "{@owner} %player%"
+        set the chat format to "%{_m}%<white>: %coloured message%"
+    else if player's group is "jamie":
+        set {_m} to mini message from "{@jamie} %player%"
+        set the chat format to "%{_m}%<white>: %coloured message%"
+    else if player's group is "co-owner":
+        set {_m} to mini message from "{@coowner} %player%"
+        set the chat format to "%{_m}%<white>: %coloured message%"
+    else if player's group is "administrator":
+        set {_m} to mini message from "{@admin} %player%"
+        set the chat format to "%{_m}%<white>: %coloured message%"
+    else:
+        set the chat format to "{@default} %player%<white>:&7 [message]"
+on death:
+    set death message to "%displayname of victim%&f died"
+    set victim's gamemode to adventure
+    remove victim from {spawnsumo::*}
+    remove victim's name from {frozenplayers::*}
+    remove victim from {alive::*}
+    remove victim from {dead::*}
+    add victim's name to {dead::*}
+on join:
+     set total experience of player to 12432
+     if player's group is "Owner":
+          set {_m} to mini message from "&0&r{@owner} %player%"
+          set the player's display name to {_m}
+          set the player's tab list name to {_m}
+          set the join message to "{@prefix} &r&7[&a+&7] %{_m}%&e Joined the game"
+     else if player's group is "jamie":
+          set {_m} to mini message from "&3&r{@jamie} %player%"
+          set the player's display name to {_m}
+          set the player's tab list name to {_m}
+          set the join message to "{@prefix} &r&7[&a+&7] %{_m}%&e Joined the game"
+     else if player's group is "co-owner":
+          set {_m} to mini message from "&2&r{@coowner} %player%"
+          set the player's display name to {_m}
+          set the player's tab list name to {_m}
+          set the join message to "{@prefix} &r&7[&a+&7] %{_m}%&e Joined the game"
+     else if player's group is "administrator":
+          set {_m} to mini message from "&3&r{@admin} %player%"
+          set the player's display name to {_m}
+          set the player's tab list name to {_m}
+          set the join message to "{@prefix} &r&7[&a+&7] %{_m}%&e Joined the game"
+     else:
+          set {_m} to mini message from "&f&r{@default} %player%"
+          set the player's display name to {_m}
+          set the player's tab list name to {_m}
+          set the join message to "{@prefix} &r&7[&a+&7] %{_m}%&e Joined the game"
+     add player's name to {dead::*}
+     apply night vision without particles to player for 100 years
+     #if player has permission "potatoevents.staffspawn":
+          #wait 1 tick
+     #else:
+          #teleport player to {spawn}
+     teleport player to {spawn}
+     while player is online:
+          if all:
+               block at the player is red carpet
+               player's gamemode is survival or adventure
+          then:
+               set player's gamemode to adventure
+               kill player
+          if all:
+               biome at player is custom
+               block at the player is water
+               player's gamemode is adventure or survival
+               {icewater} is "true"
+               {watercooldown::player's uuid} is not set
+          then:
+               set {_source} to damage source of freeze
+               set freeze ticks of player to 10 seconds
+               damage player by 4 with {_source}
+               set {watercooldown::player's uuid} to "fr"
+               wait 10 ticks
+               clear {watercooldown::player's uuid} 
+          if {ramlogging} is "true":
+               if player has permission "potatoevents.ram":
+                    send action bar "Ram Usage: %free memory%/%max memory%MB" to player
+          wait 1 tick
+on quit:
+    set the quit message to "{@prefix} &r&7[&c-&7] %displayname of player%&e Left the game"
+    remove player from {dead::*}
+    remove player from {alive::*}
+    clear {lastmessage%uuid of {lastmessage%uuid of player%}%}
+    clear {lastmessage%uuid of player%}
+on respawn:
+    apply night vision without particles to player for 100 years
+    set respawn location to {spawn}
+on shoot:
+    if {arrowride} is "true":
+        make the shooter ride the projectile
+on block physics:
+    if {physics} is "false":
+        cancel event
+on block trample:
+    if {physics} is "false":
+        cancel event
+on projectile hit:
+    wait 1 tick
+    kill projectile
+on right click on sign:
+    if line 2 is "/visibility staff":
+        make player execute "/visibility staff"
+    if line 2 is "/visibility all":
+        make player execute "/visibility all"
+    if line 2 is "/visibility none":
+        make player execute "/visibility none"
+    if line 3 is "/leavesumo":
+        make player execute "/leavesumo"
+        
+on command "/restart":
+    if player is not an op:
+        send "{@prefix} &Cfr"
+        stop
+    else:
+        cancel event
+        set {serverrestart} to "true"
+        send "Server Restarting" to discord webhook with url "https://discord.com/api/webhooks/1214361621187797033/AhQcitUJ0vNnzIy4yi0cq1RwnFLOEfk6ugS_FmnKWWC5UXOBlKh5rnO4ZsVwGP1ygU9h"
+        wait 1 second
+        restart server
+on skript start:
+    if {serverrestart} is "true":
+        set {serverrestart} to false
+        wait 1 minute
+    else:
+        send "Server Started" to discord webhook with url "https://discord.com/api/webhooks/1214361621187797033/AhQcitUJ0vNnzIy4yi0cq1RwnFLOEfk6ugS_FmnKWWC5UXOBlKh5rnO4ZsVwGP1ygU9h"
+on skript stop:
+    if {serverrestart} is "true":
+        set {serverrestart} to "true"
+        stop
+    else:   
+        send "Server Stopped" to discord webhook with url "https://discord.com/api/webhooks/1214361621187797033/AhQcitUJ0vNnzIy4yi0cq1RwnFLOEfk6ugS_FmnKWWC5UXOBlKh5rnO4ZsVwGP1ygU9h"
+
+on food level change:
+    if {hunger} is "false":
+        cancel event
+command /minimsgtest:
+    permission: skript.*
+    permission message: {@noperm}
+    trigger:
+        send mini message from "<gradient:##cd00fb:##fb00fb>⊰JakeDot⊱"
+on break:
+    if {build} is "false":
+        cancel event
+on block break:
+    if all:
+        event-world is "lavarising"
+        player's gamemode is survival
+        {gamemodifiers::randomdrops} is "true"
+    then:
+        if {randomdrop::%type of event-block%} is set:
+            clear drops
+            drop {randomdrop::%type of event-block%}
+        else:
+            set {randomdrop::%type of event-block%} to random element out of all items
+            if "%{randomdrop::%type of event-block%}%" contains "cake" or "potted" or "lava cauldron" or "water" or "stem" or "piston head" or "wall" or "cave vines" or "gateway":
+                if "%{randomdrop::%type of event-block%}%" contains "cake" or "potted" or "lava cauldron" or "water" or "stem" or "piston head" or "wall" or "cave vines" or "gateway":
+                    if "%{randomdrop::%type of event-block%}%" contains "cake" or "potted" or "lava cauldron" or "water" or "stem" or "piston head" or "wall" or "cave vines" or "gateway":
+                        if "%{randomdrop::%type of event-block%}%" contains "cake" or "potted" or "lava cauldron" or "water" or "stem" or "piston head" or "wall" or "cave vines" or "gateway":
+                            set {randomdrop::%type of event-block%} to random element out of all items
+                            clear drops
+                            drop {randomdrop::%type of event-block%}
+                        else:
+                            clear drops
+                            drop {randomdrop::%type of event-block%}
+                    else:
+                        clear drops
+                        drop {randomdrop::%type of event-block%}
+                else:
+                    clear drops
+                    drop {randomdrop::%type of event-block%}
+            else:
+                clear drops
+                drop {randomdrop::%type of event-block%}
+    if {build} is "false":
+        cancel event
+on flow:
+    if {flowing} is "false":  
+        cancel event

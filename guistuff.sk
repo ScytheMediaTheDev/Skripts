@@ -1,0 +1,259 @@
+options:
+    prefix: &3Event&8 >
+    noperm: &cYou do not have permission!
+
+command /lavatp:
+    permission: potatoevents.lavarising
+    permission message: {@noperm}
+    trigger:
+        teleport player to spawn of "lavarising" parsed as world
+#moved /HostGame to /game gui
+on inventory click:
+    if name of event-inventory is "HostGame GUI":
+        cancel event
+        if event-slot is a red carpet named "&cExit":
+            close inventory of player
+        if event-slot is a lava bucket named "&6LavaRising":
+            if {currentgame} is "lavarising":
+                open chest inventory with 3 rows named "LavaRising Settings" to player
+                loop 27 times:
+                    set slot loop-value - 1 of player's current inventory to gray stained glass pane named " "
+                set slot 3 of player's current inventory to lime stained glass pane with name "&aAdd 5 to &6LavaHeight"
+                set slot 12 of player's current inventory to lava bucket named "&6LavaHeight" with lore "&fCurrent Lava Height: %{ylevel}%"
+                set slot 21 of player's current inventory to red stained glass pane with name "&cSubtract 5 from &6LavaHeight"
+                set slot 14 of player's current inventory to grass block named "&6HeightLimit" with lore "&fCurrent Height Limit: %{heightlimit}%"
+                set slot 5 of player's current inventory to lime stained glass pane named "&aAdd 5 to &6HeightLimit"
+                set slot 23 of player's current inventory to red stained glass pane named "&cSubtract 5 from &6HeightLimit"
+                set slot 10 of player's current inventory to lime concrete named "&a&lStartGame"
+                set slot 16 of player's current inventory to red concrete named "&c&lEndGame"
+                set slot 13 of player's current inventory to clock named "&6LavaTime" with lore "&fCurrent Lava Time: %{lavatime}%s"
+                set slot 4 of player's current inventory to lime stained glass pane named "&aAdd 1s to &6LavaTime"
+                set slot 22 of player's current inventory to red stained glass pane named "&cSubtract 1s from &6LavaTime"
+                set slot 26 of player's current inventory to red carpet named "&cExit"
+            else:
+                open chest inventory with 3 rows named "LavaRising" to player
+                loop 27 times:
+                    set slot loop-value - 1 of player's current inventory to gray stained glass pane named " "
+                set slot 12 of player's current inventory to grass block named "&6Default"
+                set slot 14 of player's current inventory to stone named "&6Amplified"
+                set slot 26 of player's current inventory to red carpet named "&cExit"
+    if name of event-inventory is "LavaRising Settings":
+        cancel event
+        if event-slot is a lava bucket named "&6LavaHeight":
+            add 1 to {ylevel}
+            set slot 12 of player's current inventory to lava bucket named "&6LavaHeight" with lore "&fCurrent Lava Height: %{ylevel}%"
+        if event-slot is a lime stained glass pane named "&aAdd 5 to &6LavaHeight":
+            add 5 to {ylevel}
+            set slot 12 of player's current inventory to lava bucket named "&6LavaHeight" with lore "&fCurrent Lava Height: %{ylevel}%"
+        if event-slot is a red stained glass pane named "&cSubtract 5 from &6LavaHeight":
+            if {ylevel} is less than -59:
+                set {ylevel} to -64
+                set slot 12 of player's current inventory to lava bucket named "&6LavaHeight" with lore "&fCurrent Lava Height: %{ylevel}%"
+            else:
+                subtract 5 from {ylevel}
+                set slot 12 of player's current inventory to lava bucket named "&6LavaHeight" with lore "&fCurrent Lava Height: %{ylevel}%"
+        if event-slot is a grass block named "&6HeightLimit":
+            if {heightlimit} >= 319:
+                set {heightlimit} to "319" parsed as number
+                set {heightlimit1} to {heightlimit}
+                add 1 to {heightlimit1}
+                set slot 14 of player's current inventory to grass block named "&6HeightLimit" with lore "&fCurrent Height Limit: %{heightlimit}%"
+            else:
+                add 1 to {heightlimit}
+                set {heightlimit1} to {heightlimit}
+                add 1 to {heightlimit1}
+                set slot 14 of player's current inventory to grass block named "&6HeightLimit" with lore "&fCurrent Height Limit: %{heightlimit}%"
+        if event-slot is a lime stained glass pane named "&aAdd 5 to &6HeightLimit":
+            if {heightlimit} >= 319:
+                set {heightlimit} to "319" parsed as number
+                set {heightlimit1} to {heightlimit}
+                add 1 to {heightlimit1}
+                set slot 14 of player's current inventory to grass block named "&6HeightLimit" with lore "&fCurrent Height Limit: %{heightlimit}%"
+            else:
+                add 5 to {heightlimit}
+                set {heightlimit1} to {heightlimit}
+                add 1 to {heightlimit1}
+                set slot 14 of player's current inventory to grass block named "&6HeightLimit" with lore "&fCurrent Height Limit: %{heightlimit}%"
+        if event-slot is a red stained glass pane named "&cSubtract 5 from &6HeightLimit":
+            subtract 5 from {heightlimit}
+            set {heightlimit1} to {heightlimit}
+            add 1 to {heightlimit1}
+            set slot 14 of player's current inventory to grass block named "&6HeightLimit" with lore "&fCurrent Height Limit: %{heightlimit}%"
+        if event-slot is a lime stained glass pane named "&aAdd 1s to &6LavaTime":
+            if {lavatime} >= 10:
+                set slot 13 of player's current inventory to clock named "&6LavaTime" with lore "&fCurrent Lava Time: %{lavatime}%s"
+            else:
+                add 1 to {lavatime}
+                set slot 13 of player's current inventory to clock named "&6LavaTime" with lore "&fCurrent Lava Time: %{lavatime}%s"
+        if event-slot is a red stained glass pane named "&cSubtract 1s from &6LavaTime": 
+            if {lavatime} is less than 2:
+                set {lavatime} to 1
+                set slot 13 of player's current inventory to clock named "&6LavaTime" with lore "&fCurrent Lava Time: %{lavatime}%s"
+            else:
+                subtract 1 from {lavatime}
+                set slot 13 of player's current inventory to clock named "&6LavaTime" with lore "&fCurrent Lava Time: %{lavatime}%s"
+        if event-slot is a lime concrete named "&a&lStartGame":
+            if {lavastartable} is "true":
+                set {lavastart} to "true"
+                close inventory of player
+                broadcast "{@prefix} &aLavaRising Starting"
+                execute console command "/rg flag -w lavarising __global__ passthrough allow"
+                loop 256 times:
+                    if {lavastart} is "true":
+                        if {ylevel} < {heightlimit}:
+                            execute console command "/worldedit:/world lavarising"
+                            execute console command "/worldedit:/pos1 49,%{ylevel}%,49"
+                            execute console command "/worldedit:/pos2 -50,%{ylevel}%,-50"
+                            execute console command "/worldedit:/set lava"
+                            broadcast "{@prefix} &6Lava Has Risen to %{ylevel}%"
+                            add 1 to {ylevel}
+                            set {_wait} to "%{lavatime}% seconds" parsed as timespan
+                            wait {_wait}
+                        else:
+                            execute console command "/worldedit:/world lavarising"
+                            execute console command "/worldedit:/pos1 49,%{ylevel}%,49"
+                            execute console command "/worldedit:/pos2 -50,%{ylevel}%,-50"
+                            execute console command "/worldedit:/replace air lava"
+                            broadcast "{@prefix} &6Lava Has Risen to %{ylevel}%"
+                            stop
+            else:
+                close inventory of player
+                send "&cThe Game is Not Startable Yet"
+        if event-slot is a red concrete named "&c&lEndGame":
+            set {lavastart} to "false"
+            set {currentgame} to "unloaded"
+            broadcast "{@prefix} &aThe Game Has Ended!"
+            close inventory of player
+            wait 2 seconds
+            execute console command "/game unload"
+        if event-slot is a red carpet named "&cExit":
+            close inventory of player
+    if name of event-inventory is "LavaRising":
+        cancel event
+        if event-slot is a red carpet named "&cExit":
+            close inventory of player
+        else if event-slot is a grass block named "&6Default":
+            set {lavastartable} to "false"
+            set {ylevel} to "-64" parsed as number
+            set {lavatime} to "3" parsed as integer
+            set {heightlimit} to "256" parsed as number
+            set {heightlimit1} to {heightlimit}
+            add 1 to {heightlimit1}
+            set {currentgame} to "lavarising"
+            close inventory of player
+            teleport all players to {spawnSave}
+            set {spawn} to {spawnSave}
+            set all players' gamemode to adventure
+            broadcast "{@prefix} &eLoading Lavarising &6Default" 
+            execute console command "/mv delete lavarising"
+            wait 1 tick
+            execute console command "/mv confirm"
+            wait 1 ticks
+            send "{@prefix} &eCreating World..."
+            execute console command "/mv create lavarising normal"
+            wait 10 seconds
+            send "{@prefix} &eLoading Chunks..."
+            wait 1 second
+            async load chunk at 0,0 in world "lavarising"
+            async load chunk at -1,0 in world "lavarising"
+            async load chunk at -1,-1 in world "lavarising"
+            async load chunk at 0,-1 in world "lavarising"
+            wait 5 seconds
+            shrink world border of world "lavarising" to 100
+            wait 1 second
+            send "{@prefix} &aTeleporting All Players..."
+            execute console command "/rg flag __global__ -w lavarising passthrough deny"
+            execute console command "/rg flag __global__ -w lavarising pvp deny"
+            teleport all players to spawn of "lavarising" parsed as world
+            set all players' gamemode to survival
+            send "{@prefix} &aLoaded Lavarising"
+            set {lavastartable} to "true"
+            set the gamerule doInsomnia of world "lavarising" to false
+        else if event-slot is a stone named "&6Amplified":
+            set {lavastartable} to "false"
+            set {ylevel} to "-64" parsed as number
+            set {lavatime} to "3" parsed as integer
+            set {heightlimit} to "256" parsed as number
+            set {heightlimit1} to {heightlimit}
+            add 1 to {heightlimit1}
+            set {currentgame} to "lavarising"
+            close inventory of player
+            teleport all players to {spawnSave}
+            set {spawn} to {spawnSave}
+            set all players' gamemode to adventure
+            broadcast "{@prefix} &eLoading Lavarising &6Amplified" 
+            execute console command "/mv delete lavarising"
+            wait 1 tick
+            execute console command "/mv confirm"
+            wait 1 tick
+            send "{@prefix} &eCreating World..."
+            execute console command "/mv create lavarising normal -t amplified"
+            wait 10 seconds
+            send "{@prefix} &eLoading Chunks..."
+            wait 1 second
+            async load chunk at 0,0 in world "lavarising"
+            async load chunk at -1,0 in world "lavarising"
+            async load chunk at -1,-1 in world "lavarising"
+            async load chunk at 0,-1 in world "lavarising"
+            wait 5 seconds
+            shrink world border of world "lavarising" to 100
+            wait 1 second
+            send "{@prefix} &aTeleporting All Players..."
+            execute console command "/rg flag __global__ -w lavarising passthrough deny"
+            execute console command "/rg flag __global__ -w lavarising pvp deny"
+            teleport all players to spawn of "lavarising" parsed as world
+            set all players' gamemode to survival
+            send "{@prefix} &aLoaded Lavarising"  
+            set {lavastartable} to "true"
+            set the gamerule doInsomnia of world "lavarising" to false
+    if name of event-inventory is "Game Modifiers":
+        cancel event
+        if event-slot is popped chorus fruit named mini message from "<rainbow>Random Drops":
+            if {gamemodifiers::randomdrops::state} is "&aEnabled%nl%&8Disabled":
+                set {gamemodifiers::randomdrops::state} to "&8Enabled%nl%&cDisabled"
+                set {gamemodifiers::randomdrops} to "false"
+                clear {randomdrop::*}
+                set slot 13 of player's current inventory to popped chorus fruit named mini message from "<rainbow>Random Drops"  with lore "%{gamemodifiers::randomdrops::state}%"
+            else:
+                set {gamemodifiers::randomdrops::state} to "&aEnabled%nl%&8Disabled"
+                set {gamemodifiers::randomdrops} to "true"
+                set slot 13 of player's current inventory to popped chorus fruit named mini message from "<rainbow>Random Drops"  with lore "%{gamemodifiers::randomdrops::state}%"
+        if event-slot is feather named mini message from "<aqua>Double Jump":
+            if {gamemodifiers::doublejump::state} is "&aEnabled%nl%&8Disabled":
+                set {gamemodifiers::doublejump::state} to "&8Enabled%nl%&cDisabled"
+                set {gamemodifiers::doublejump} to "false"
+                set slot 12 of player's current inventory to feather named mini message from "<aqua>Double Jump" with lore "%{gamemodifiers::doublejump::state}%"
+            else:
+                set {gamemodifiers::doublejump::state} to "&aEnabled%nl%&8Disabled"
+                set {gamemodifiers::doublejump} to "true"
+                set slot 12 of player's current inventory to feather named mini message from "<aqua>Double Jump" with lore "%{gamemodifiers::doublejump::state}%"
+        if event-slot is stone axe named mini message from "<blue>Starter Tools":
+            if {gamemodifiers::startertools::state} is "&aEnabled%nl%&8Disabled":
+                set {gamemodifiers::startertools::state} to "&8Enabled%nl%&cDisabled"
+                set {gamemodifiers::startertools} to "false"
+                set slot 14 of player's current inventory to stone axe named mini message from "<blue>Starter Tools" with lore "%{gamemodifiers::startertools::state}%"
+                remove unbreakable stone axe of efficiency 2 from all players' inventory
+                remove unbreakable stone pickaxe of efficiency 2 from all players' inventory
+                remove unbreakable stone shovel of efficiency 2 from all players' inventory
+            else:
+                set {gamemodifiers::startertools::state} to "&aEnabled%nl%&8Disabled"
+                set {gamemodifiers::startertools} to "true"
+                set slot 14 of player's current inventory to stone axe named mini message from "<blue>Starter Tools" with lore "%{gamemodifiers::startertools::state}%"
+                add unbreakable stone axe of efficiency 2 to all players' inventory
+                add unbreakable stone pickaxe of efficiency 2 to all players' inventory
+                add unbreakable stone shovel of efficiency 2 to all players' inventory
+        if event-slot is red carpet named "&cExit":
+            close inventory of player
+on block place:
+    if all:
+        player is in world "lavarising"
+        event-block's y coordinate is greater than {heightlimit1}
+    then:
+        send actionbar "&cheight limit is %{heightlimit}%" to player
+        play sound "minecraft:block.note_block.bass"
+        cancel event
+command /randomdropdebug:
+    permission: potatoevents.randomdropdebug
+    permission message: {@noperm}
+    trigger:
+        send {randomdrop::%type of target block%}

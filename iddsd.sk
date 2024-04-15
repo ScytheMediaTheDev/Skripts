@@ -1,0 +1,24 @@
+command /sethome:
+    permission: potatoevents.home
+    trigger:
+        if {home::%uuid of player%} is not set:
+            set {home::%uuid of player%} to player's location
+            send "Set Home to %x coordinate of {home::%uuid of player%}%, %y coordinate of {home::%uuid of player%}%, %z coordinate of {home::%uuid of player%}%"
+        else:
+            send ";c"
+command /home:
+    permission: potatoevents.home
+    trigger:
+        if {home::%uuid of player%} is set:
+            teleport player to {home::%uuid of player%}
+            send "&6Teleporting..."
+        else:
+            send ";c"
+command /delhome:
+    permission: potatoevents.home
+    trigger:
+        if {home::%uuid of player%} is set:
+            clear {home::%uuid of player%}
+            send "deleted home"
+        else:
+            send ";c"

@@ -1,0 +1,194 @@
+options:
+    prefix: &3Event&8 >
+    noperm: &cYou do not have permission!
+
+command /tpall:
+    permission: potatoevents.tpall
+    permission message: &cYou do not have permission!
+    trigger:
+        teleport all players to player
+command /gm <text>:
+    permission: potatoevents.gm
+    permission message: &cYou do not have permission!
+    trigger:
+        if arg 1 is set:
+            arg 1 is "c" or "creative":
+                set player's gamemode to creative
+                send "{@prefix} &rSet your gamemode to &eCreative"
+            arg 1 is "s" or "survival":
+                set player's gamemode to survival
+                send "{@prefix} &rSet your gamemode to &eSurvival"
+            arg 1 is "a" or "adventure":
+                set player's gamemode to adventure
+                send "{@prefix} &rSet your gamemode to &eAdventure"
+            arg 1 is "sp" or "spectator":
+                set player's gamemode to spectator
+                send "{@prefix} &rSet your gamemode to &eSpectator"
+command /gmc:
+    trigger:
+        make player execute command "/gm c"
+command /gms:
+    trigger:
+        make player execute command "/gm s"
+command /gma:
+    trigger:
+        make player execute command "/gm a"
+command /gmsp:
+    trigger:
+        make player execute command "/gm sp"
+command /tphere <player>:
+    permission: potatoevents.tphere
+    permission message: &cYou do not have permission!
+    trigger:
+        teleport arg 1 to player
+command /mutechat:
+    permission: potatoevents.chatmute
+    permission message: &cYou do not have permission!
+    trigger:
+        if {Globalchat} is not set:
+            set {Globalchat} to true
+            broadcast "{@prefix} &cChat muted by &l%player%"
+            stop trigger
+
+        if {Globalchat} is set:
+            clear {Globalchat}
+            broadcast "{@prefix} &aChat unmuted by &l%player%"
+command /kit <text> [<player>]:
+    permission: potatoevents.kit
+    permission message: &cYou do not have permission!
+    trigger:
+        arg 1 is "redrover":
+            give arg 2 1 diamond sword
+            give arg 2 1 diamond helmet
+            give arg 2 1 diamond chestplate
+            give arg 2 1 diamond leggings
+            give arg 2 1 diamond boots
+            arg 2 is not set:
+                give player 1 diamond sword
+                give player 1 diamond helmet
+                give player 1 diamond chestplate
+                give player 1 diamond leggings
+                give player 1 diamond boots
+            
+command /tpalive:
+    permission: potatoevents.tpalive
+    permission message: &cYou do not have permission!
+    trigger:
+        teleport {alive::*} to player
+command /tpdead:
+    permission: potatoevents.tpdead
+    permission message: &cYou do not have permission!
+    trigger:
+        teleport {dead::*} to player
+command /msg <player> <text>:
+    aliases: /message
+    trigger:
+        if {msg%uuid of arg-1%msg} is "false":
+            send "&c%arg-1% Has Messages Disabled" to player
+        else:
+            send "&b%player% &7> &bYou&f: %arg-2%" to arg 1
+            send "&bYou &7> &b%arg-1%&f: %arg-2%" to player
+            set {lastmessage%uuid of arg 1%} to player
+            set {lastmessage%uuid of player%} to arg 1
+command /reply <text>:
+    aliases: /r
+    trigger:
+        if {lastmessage%uuid of player%} is not set:
+            send "{@prefix} &cYou have No one the reply to"      
+        else:
+            if {msg%uuid of {lastmessage%uuid of player%}%msg} is "false":
+                send "&c%{lastmessage%uuid of player%}% Has Messages Disabled" to player
+            else:
+                send "&b%player% &7> &bYou&f: %arg-1%" to {lastmessage%uuid of player%}
+                send "&bYou &7> &b%{lastmessage%uuid of player%}%&f: %arg-1%" to player   
+command /msgtoggle:
+    aliases: /tpm
+    trigger:
+        if {msg%uuid of player%msg} is "true":
+            set {msg%uuid of player%msg} to "false"
+            send "{@prefix} &rPrivate Messages Have Been Toggled Off" to player
+        else:
+            set {msg%uuid of player%msg} to "true"
+            send "{@prefix} &rPrivate Messages Have Been Toggled On" to player
+command /heal [<player>]:
+    permission: potatoevents.heal
+    permission message: &cYou do not have permission!
+    trigger:
+        if arg 1 is not set:
+            heal player
+            set the player's food level to 20
+        else:
+            heal arg 1
+            set arg 1's food level to 20
+command /healall:
+    permission: potatoevents.heal
+    permission message: &cYou do not have permission!
+    trigger:
+        heal all players
+        set the food level of all players to 20
+command /broadcast <text>:
+    aliases: /bc, /bcast
+    permission: potatoevents.braodcast
+    permission message: &cYou do not have permission!
+    trigger:
+        send "{@prefix} &r%colored arg 1%"
+command /list:
+    trigger:
+        send "Players: (%size of players%/%max players%)%nl%%all players%"
+command /setwarp <text> [<text>]:
+    permission: potatoevents.setwarp
+    permission message: {@noperm}
+    trigger:
+        if arg 1 is not "help":
+            if arg 2 is not "--override":
+                if {warps::%arg-1%} is set:
+                    send "{@prefix} &cThis Warp Is Already Set, To Override '--override'"
+                else:
+                    add arg 1 to {warp::*}
+                    set {warps::%arg-1%} to player's location
+                    send "{@prefix} &7Set Warp &e%arg-1%&7 to &e%x coordinate of {warps::%arg-1%}%, %y coordinate of {warps::%arg-1%}%, %z coordinate of {warps::%arg-1%}%" to player
+            else:
+                add arg 1 to {warp::*}
+                set {warps::%arg-1%} to player's location
+                send "{@prefix} &7Set Warp &e%arg-1%&7 to &e%x coordinate of {warps::%arg-1%}%, %y coordinate of {warps::%arg-1%}%, %z coordinate of {warps::%arg-1%}%" to player
+        else:
+            send "{@prefix} &cYou Cannot Set a Warp With That Name"
+command /warp <text>:
+    permission: potatoevents.warp
+    permission message: {@noperm}
+    trigger:
+        if {warps::%arg-1%} is not set:
+            send "{@prefix} &cThis Warp Does Not Exist"
+        else:
+            teleport player to {warps::%arg-1%}
+command /warps:
+    permission: potatoevents.warp
+    permission message: {@noperm}
+    trigger:
+        send "{@prefix} &6Warps:&f %{warp::*}%"
+command /delwarp <text> [<text>]:
+    permission: potatoevents.setwarp
+    permission message: {@noperm}
+    trigger:
+        if {warps::%arg-1%} is set:
+            if arg 2 is not "--confirm":
+                send "{@prefix} &cTo Confirm Please Add '--confirm' To The End Of Your Command"
+            else:
+                remove arg 1 from {warp::*}
+                send "{@prefix} &aWarp &e'%arg-1%' &aDeleted"
+                clear {warps::%arg-1%}
+        else:
+            send "{@prefix} &cThis Warp Does Not Exist"
+command //air:
+    trigger:
+        make player execute command "//set air"
+command /ci:
+    permission: potatoevents.ci
+    permission message: {@noperm}
+    trigger:
+        clear player's inventory
+command /ciall:
+    permission: potatoevents.ci
+    permission message: {@noperm}
+    trigger:
+        clear all players' inventory
