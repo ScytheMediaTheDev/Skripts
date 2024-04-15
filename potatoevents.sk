@@ -132,11 +132,14 @@ command /game <text> [<text>]:
                 teleport all players to {mainmiddle}
             if {currentgame} is "unloaded":
                 send "{@prefix} &cThere is No Loaded Game To Start"
+            else:
+                send ";c"
         arg 1 is "gui":
             open chest inventory with 3 rows named "HostGame GUI" to player
             loop 27 times:
                 set slot loop-value - 1 of player's current inventory to gray stained glass pane named " "
             set slot 13 of player's current inventory to lava bucket named "&6LavaRising"
+            set slot 14 to grass block named "BlockShuffle"
             set slot 26 of player's current inventory to red carpet named "&cExit"
             if player is an op:
                 cancel cooldown
