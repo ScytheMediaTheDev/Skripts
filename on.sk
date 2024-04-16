@@ -185,7 +185,7 @@ on break:
             cancel event
 on block break:
     if all:
-        event-world is "lavarising"
+        event-world is "lavarising" or "blockshuffle"
         player's gamemode is survival
         {gamemodifiers::randomdrops} is "true"
     then:
@@ -204,6 +204,7 @@ on flow:
         if event-world is not "lavarising" or "blockshuffle":
             cancel event
 command /randomdrop-loop-debug <text>:
+    permission: potatoevents.frfrfrfr
     trigger:
         loop {allitems::*}:
             if "%loop-value%" contains arg 1:

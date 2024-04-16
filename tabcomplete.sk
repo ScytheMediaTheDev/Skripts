@@ -50,7 +50,8 @@ on region exit:
         clear inventory of player
 on region enter:
     if event-region is "spawnsumo":
-        set player's gamemode to survival
+        if event-player's gamemode is not creative:
+            set player's gamemode to survival
         set {pvp} to "true"
         enable pvp in world "world"
         if {spawnsumo::*} does not contain player:

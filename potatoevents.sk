@@ -151,6 +151,7 @@ command /game <text> [<text>]:
             set slot 13 of player's current inventory to popped chorus fruit named mini message from "<rainbow>Random Drops" with lore "%{gamemodifiers::randomdrops::state}%"
             set slot 12 of player's current inventory to feather named mini message from "<aqua>Double Jump" with lore "%{gamemodifiers::doublejump::state}%"
             set slot 14 of player's current inventory to stone axe named mini message from "<blue>Starter Tools" with lore "%{gamemodifiers::startertools::state}%"
+            set slot 18 of player's current inventory to trident named mini message from "<bold><aqua>Vision" with lore "%{gamemodifiers::vision::state}%"
             set slot 26 of player's current inventory to red carpet named "&cExit"
             if player is an op:
                 cancel cooldown
