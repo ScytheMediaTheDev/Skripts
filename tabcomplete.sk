@@ -24,7 +24,7 @@ on tab complete of "/skin":
 on tab complete of "/toggle":
     set tab completions for position 1 to "/hub", "icewater", "ramlogging"
 on tab complete of "/warp":
-    set tab completions for position 1 to {warp::*}
+    set tab completions for position 1 to indices of {warps::*}
 on command "/pl":
     if player is not an op:
         cancel event

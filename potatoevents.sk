@@ -99,6 +99,7 @@ command /game <text> [<text>]:
                 broadcast "{@prefix} &aLoaded DripDrop"
         arg 1 is "unload":
             set {currentgame} to "unloaded"
+            set {startedgame} to "unloaded"
             gamestart(player)
             teleport all players to {spawnSave}
             set all players' gamemode to adventure
@@ -132,8 +133,21 @@ command /game <text> [<text>]:
                 teleport all players to {mainmiddle}
             if {currentgame} is "unloaded":
                 send "{@prefix} &cThere is No Loaded Game To Start"
+            if {currentgame} is "blockshuffle":
+                if {startedgame} is not "blockshuffle":
+                    set {startedgame} to "blockshuffle"
+                    expand world border of world "blockshuffle" to 1000
+                    set {blockshuffle::block} to random element out of all blocks
+                else:
+                    send "{@prefix}&c This Game is already started!"
             else:
                 send ";c"
+        arg 1 is "skip":
+            if {currentgame} is "blockshuffle":
+                set {blockshuffle::block} to random element out of all blocks
+                broadcast "&6The next block us &e%{blockshuffle::block}%"
+            else:
+                send "nah"
         arg 1 is "gui":
             open chest inventory with 3 rows named "HostGame GUI" to player
             loop 27 times:
@@ -518,10 +532,12 @@ on damage:
             remove victim from team named "freezetagfrozen"
             remove glowing from victim
             set helmet of victim to air
-    if {gamemodifiers::doublejump} is "true":
+    if {gamemodifiers::doublejump} or {gamemodifiers::vision} is "true":
         damage cause is fall:
             if event-world is "lavarising" or "blockshuffle":
                 cancel event
+    if damage cause is hitting wall while flying or flying into a wall:
+        cancel event
 command /hunger:
     permission: potatoevents.hunger
     permission message: smth here idk

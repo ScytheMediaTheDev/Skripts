@@ -52,7 +52,7 @@ function lavaGen(p: player, terrain: text, terrainmsg: text):
 function bsGen(p: player, terrain: text, terrainmsg: text):
     clear all players' inventory
     set {blockshufflestartable} to "false"
-    set {currentgame} to "blockshuffle"
+    set {currentgame} to "loading_blockshuffle"
     if {gamemodifiers::doublejump::state} is "&aEnabled%nl%&8Disabled":
         set {gamemodifiers::doublejump::state} to "&8Enabled%nl%&cDisabled"
         set {gamemodifiers::doublejump} to "false"
@@ -63,7 +63,9 @@ function bsGen(p: player, terrain: text, terrainmsg: text):
         set {gamemodifiers::randomdrops::state} to "&8Enabled%nl%&cDisabled"
         set {gamemodifiers::randomdrops} to "false"
         clear {randomdrop::*}
-    
+    if {gamemodifiers::vision::state} is "&aEnabled%nl%&8Disabled":
+        set {gamemodifiers::vision::state} to "&8Enabled%nl%&cDisabled"
+        set {gamemodifiers::vision} to "false"
     close inventory of {_p}
     teleport all players to {spawnSave}
     set {spawn} to {spawnSave}
@@ -77,32 +79,21 @@ function bsGen(p: player, terrain: text, terrainmsg: text):
     execute console command "/mv create blockshuffle normal -t %{_terrain}%"
     wait 10 seconds
     send "{@prefix} &eStarting Pregen" to {_p}
-    #pov no pregen code
     shrink world border of world "blockshuffle" to 1000
     execute console command "/cy world blockshuffle"
     execute console command "/cy worldborder"
     execute console command "/cy start"
-    send "check console for pregen percentage" to {_p}
-    #pov no pregen code
-command /blockshuffletpall:
-    permission: potatoevents.blockshuffle
-    permission message: {@noperm}
-    trigger:
-        set time of world "blockshuffle" to 12:00
-        send "{@prefix} &aTeleporting All Players..." to {_p}
-        execute console command "/rg flag __global__ -w blockshuffle passthrough deny"
-        execute console command "/rg flag __global__ -w blockshuffle pvp deny"
-        teleport all players to spawn of "blockshuffle" parsed as world
-        set all players' gamemode to survival
-        send "{@prefix} &aLoaded BlockShuffle" to {_p}
-        set {blockshufflestartable} to "true"
-        set the gamerule doInsomnia of world "blockshuffle" to false
-        set the gamerule keepInventory of world "blockshuffle" to true
+
 command /lavatp:
     permission: potatoevents.lavarising
     permission message: {@noperm}
     trigger:
         teleport player to spawn of "lavarising" parsed as world
+command /blockshuffletp:
+    permission: potatoevents.blockshuffle
+    permission message: {@noperm}
+    trigger:
+        teleport player to spawn of "blockshuffle" parsed as world
 #moved /HostGame to /game gui
 on inventory click:
     if name of event-inventory is "HostGame GUI":
@@ -247,6 +238,7 @@ on inventory click:
             lavaGen(player, "amplified", "Amplified")
     if name of event-inventory is "Game Modifiers":
         cancel event
+        #GameModifiers
         if event-slot is popped chorus fruit named mini message from "<rainbow>Random Drops":
             if {gamemodifiers::randomdrops::state} is "&aEnabled%nl%&8Disabled":
                 set {gamemodifiers::randomdrops::state} to "&8Enabled%nl%&cDisabled"
@@ -286,13 +278,18 @@ on inventory click:
                 set {gamemodifiers::vision::state} to "&8Enabled%nl%&cDisabled"
                 set {gamemodifiers::vision} to "false"
                 set slot 18 of player's current inventory to trident named mini message from "<bold><aqua>Vision" with lore "%{gamemodifiers::vision::state}%"
+                set gamerule doWeatherCycle of world "blockshuffle" and "lavarising" to true
                 remove unbreakable trident of riptide 3 from all players' inventory
-                set chestplates of all players to air
+                remove elytra from all players' inventory
+                remove firework from all players' inventory
                 set weather to clear
             else:
                 set {gamemodifiers::vision::state} to "&aEnabled%nl%&8Disabled"
+                loop all players:
+                    set slot 8 of loop-player to firework
                 set {gamemodifiers::vision} to "true"
                 set slot 18 of player's current inventory to trident named mini message from "<bold><aqua>Vision" with lore "%{gamemodifiers::vision::state}%"
+                set gamerule doWeatherCycle of world "blockshuffle" and "lavarising" to false
                 set chestplates of all players to unbreakable elytra
                 add unbreakable trident of riptide 3 to all players' inventory
                 set weather to rain
@@ -312,13 +309,88 @@ command /randomdropdebug:
     trigger:
         send {randomdrop::%type of target block%}
 on log:
-    if logged message contains "[Chunky] Task":
-        set {logged} to logged message
+    if logged message contains "[Chunky] Task running for blockshuffle":
+        set {blockshufflepregen} to "true"
+        if length of logged message is greater than 148:
+            set {logged} to logged message
+            set {logged1} to last (length of {logged} - 91) characters of {logged} 
+            set {logged1} to subtext of {logged1} from character 1 to (the length of {logged1} - 35)
+        else if length of logged message is greater than 147:
+            set {logged} to logged message
+            set {logged1} to last (length of {logged} - 91) characters of {logged} 
+            set {logged1} to subtext of {logged1} from character 1 to (the length of {logged1} - 33)
+        else if length of logged message is greater than 145:
+            set {logged} to logged message
+            set {logged1} to last (length of {logged} - 91) characters of {logged} 
+            set {logged1} to subtext of {logged1} from character 1 to (the length of {logged1} - 33)
+        else if length of logged message is greater than 144:
+            set {logged} to logged message
+            set {logged1} to last (length of {logged} - 91) characters of {logged} 
+            set {logged1} to subtext of {logged1} from character 1 to (the length of {logged1} - 32)
+        else if length of logged message is smaller than 145:
+            set {logged} to logged message
+            set {logged1} to last (length of {logged} - 90) characters of {logged} 
+            set {logged1} to subtext of {logged1} from character 1 to (the length of {logged1} - 30)
+        else:
+            set {logged} to logged message
+            set {logged1} to last (length of {logged} - 90) characters of {logged} 
+            set {logged1} to subtext of {logged1} from character 1 to (the length of {logged1} - 30)
+            send length of logged message to ops
+    if logged message contains "[Chunky] Task finished for blockshuffle":
+        set {blockshufflepregen} to "false"
+        send actionbar "&6(100.00%%), ETA: 0:00:00" to all players
+        set time of world "blockshuffle" to 12:00
+        execute console command "/rg flag __global__ -w blockshuffle passthrough deny"
+        execute console command "/rg flag __global__ -w blockshuffle pvp deny"
+        shrink world border of world "blockshuffle" to 30
+        if block below spawn of world "blockshuffle" is water:
+            set block below spawn of world "blockshuffle" to grass block
+        clear all players' inventory
+        teleport all players to spawn of "blockshuffle" parsed as world
+        set {currentgame} to "blockshuffle"
+        set all players' gamemode to survival
+        send title "&a&LBlock Shuffle" to all players
+        set {blockshufflestartable} to "true"
+        set the gamerule doInsomnia of world "blockshuffle" to false
+        set the gamerule keepInventory of world "blockshuffle" to true
 every second:
-    if {blockshufflestartable} is "false":
-        send actionbar "%{logged}%" to all players
-command /testwildcard:
+    if {blockshufflepregen} is "true":
+        send actionbar "&6%{logged1}%" to all players
+on right click with firework:
+    if {gamemodifiers::vision} is "true":
+        if player has a firework in offhand:
+            wait 1 tick
+            set the off hand item to 1 firework
+        else:
+            wait 1 tick
+            set player's tool to 1 firework
+on right click:
+    if player has a firework in offhand:
+        wait 1 tick
+        set the off hand item to 1 firework
+every 2 seconds:
+    if {gamemodifiers::vision} is "true":
+        loop all players:
+            if loop-player is in world "blockshuffle" or "lavarising":
+                if loop-player's inventory does not contain firework:
+                    give loop-player firework
+every tick:
+    if {currentgame} is "blockshuffle":
+        loop all players:
+            if scoreboard of loop-player is off:
+                toggle scoreboard of loop-player on
+            set title of loop-player's scoreboard to "      <light red><bold>Block Shuffle    "
+            set line 5 of loop-player's scoreboard to nl
+            set line 4 of loop-player's scoreboard to "&aBlock: &b%{blockshuffle::block}% &6(%{blockshuffle::taken}%/%{blockshuffle::available}%)"
+            set line 3 of loop-player's scoreboard to "&aPlayers remaining: &b%{blockshuffle::alive}%"
+            set line 2 of loop-player's scoreboard to nl
+            set line 1 of loop-player's scoreboard to "&b&nPotatoEvents.Ender-Zone.com"
+    else:
+        loop all players:
+            if scoreboard of loop-player is on:
+                toggle scoreboard of loop-player off 
+command /clearscoreboard:
+    permission: potatoevents.beta
     trigger:
-        set {_ttt} to "testfr (22.5)"
-        if {_ttt} contains "(**.*)":
-            send "t"
+        loop all players:
+            clear loop-player's scoreboard
