@@ -23,7 +23,7 @@ function fivesectimer(p: player):
 function gamestart(p: player):
     clear all players' inventory
     clear all the potion effects of all players
-command /game <text> [<text>]:
+command /game <text> [<string>]:
     permission: potatoevents.game
     permission message: &cYou do not have permission!
     trigger:
@@ -108,36 +108,38 @@ command /game <text> [<text>]:
         arg 1 is "start":
             if {currentgame} is "anvildrop":
                 send "{@prefix} &cThis Game is Not Startable"
-            if {currentgame} is "icesumo":
+            else if {currentgame} is "icesumo":
                 fivesectimer(player)
                 wait 5 seconds
                 execute console command "/rg flag -w world icesumo pvp allow"
                 send "{@prefix} &a PvP Has Been Enabled" to all players
-            if {currentgame} is "dripdrop":
+            else if {currentgame} is "dripdrop":
                 if {physics} is "true":
                     set {physics} to false
                 fivesectimer(player)
                 wait 5 seconds
                 execute console command "/physics"
-            if {currentgame} is "redrover":
+            else if {currentgame} is "redrover":
                 fivesectimer(player)
                 wait 5 seconds
                 execute console command "/rg flag -w world redrover pvp allow" 
                 send "{@prefix} &a PvP Has Been Enabled" to all players
-            if {currentgame} is "spleef":
+            else if {currentgame} is "spleef":
                 fivesectimer(player)
                 wait 5 seconds
                 execute console command "/rg flag -w world spleef block-break allow" 
                 send "{@prefix} &a Block Break Has Been Enabled" to all players
-            if {currentgame} is "trappingkids":
+            else if {currentgame} is "trappingkids":
                 teleport all players to {mainmiddle}
-            if {currentgame} is "unloaded":
+            else if {currentgame} is "unloaded":
                 send "{@prefix} &cThere is No Loaded Game To Start"
-            if {currentgame} is "blockshuffle":
+            else if {currentgame} is "blockshuffle":
                 if {startedgame} is not "blockshuffle":
+                    execute console command "/rg flag __global__ -w blockshuffle passthrough allow"
                     set {startedgame} to "blockshuffle"
                     expand world border of world "blockshuffle" to 1000
                     set {blockshuffle::block} to random element out of all blocks
+                    broadcast "&6The block is &e%translate component from {blockshuffle::block}%"
                 else:
                     send "{@prefix}&c This Game is already started!"
             else:
@@ -145,7 +147,7 @@ command /game <text> [<text>]:
         arg 1 is "skip":
             if {currentgame} is "blockshuffle":
                 set {blockshuffle::block} to random element out of all blocks
-                broadcast "&6The next block us &e%{blockshuffle::block}%"
+                broadcast "&6The next block is &e%translate component from {blockshuffle::block}%"
             else:
                 send "nah"
         arg 1 is "gui":
@@ -169,6 +171,35 @@ command /game <text> [<text>]:
             set slot 26 of player's current inventory to red carpet named "&cExit"
             if player is an op:
                 cancel cooldown
+        arg 1 is "revive":
+            if {currentgame} is "blockshuffle":
+                if arg 2 parsed as offlineplayer is online:
+                    if {blockshuffle::alive::*} does not contain arg 2 parsed as player:
+                        add arg 2 parsed as player to {blockshuffle::alive::*}
+                        set {_l} to spawn of "blockshuffle" parsed as world
+                        teleport arg 2 parsed as player to {_l}
+                        set {blockshuffle::available} to size of {blockshuffle::alive::*}
+                        if {blockshuffle::available} is not smaller than 2:
+                            remove 1 from {blockshuffle::available}
+                        broadcast "{@prefix}&a%arg-2% has been revived"
+                    else:
+                        send "{@prefix} &cThat player is already alive!"
+                else if arg 2 is "all":
+                    loop all players:
+                        if {blockshuffle::alive::*} does not contain loop-player:
+                            add loop-player to {blockshuffle::alive::*}
+                            teleport arg 2 parsed as player to {_l}
+                        set {_l} to spawn of "blockshuffle" parsed as world
+                        teleport arg 2 parsed as player to {_l}
+                        set {blockshuffle::available} to size of {blockshuffle::alive::*}
+                        if {blockshuffle::available} is not smaller than 2:
+                            remove 1 from {blockshuffle::available}
+                        broadcast "{@prefix}&a%arg-2% has been revived"
+                else:
+                    send "{@prefix}&c That player is not online!"
+                    
+            else:
+                send ";c"
 
 command /visibility <text>:
     aliases: /vis
@@ -550,13 +581,24 @@ command /hunger:
             send "hunger &cDisabled"
 every 1 second:
     loop all players:
-        if {frozenplayers::*} contains loop-player:
+        if {frozenplayers::*} contains loop-player's name:
             set {_source} to damage source of freeze
             set freeze ticks of loop-player to 2 seconds
             damage loop-player by 2 with {_source}
 on any move:
     if {frozenplayers::*} contains player:
         cancel event
+    if all:
+        block below or at player is {blockshuffle::block}
+        {currentgame} is "blockshuffle"
+        {blockshuffle::taken::*} does not contain player
+        {blockshuffle::alive::*} contains player
+    then:
+        add player to {blockshuffle::taken::*}
+        set block below player to air
+        play sound "minecraft:block.note_block.chime" for player
+        broadcast "&a%player% has found the block (%{blockshuffle::taken::*}%/%{blockshuffle::available}%)"
+
 on jump:
     if player's gamemode is not creative:
         if {gamemodifiers::doublejump} is "true":

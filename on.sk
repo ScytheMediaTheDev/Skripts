@@ -29,9 +29,7 @@ on chat:
             set {_ss} to last (length of {_ss} - 1) characters of {_ss} 
             send "&6StaffChat %player%: %{_ss}%" to all ops
     if {Globalchat} is true:
-        if player has permission "potatoevents.chatmutebypass":
-            stop trigger
-        else:
+        if player does not have permission "potatoevents.chatmutebypass":
             cancel event
             send actionbar "&cThe Chat is currently muted!"
             play sound "minecraft:block.note_block.bass"
@@ -50,7 +48,7 @@ on chat:
     else:
         set the chat format to "{@default} %player%<white>:&7 [message]"
 on death:
-    set death message to "%displayname of victim%&f died"
+    set death message to "&c☠ <reset>%displayname of victim%&f died"
     set victim's gamemode to adventure
     remove victim from {spawnsumo::*}
     remove victim's name from {frozenplayers::*}
@@ -90,6 +88,10 @@ on join:
           #wait 1 tick
      #else:
           #teleport player to {spawn}
+     if {currentgame} is "blockshuffle":
+          set player's gamemode to spectator
+     if player is not an op:
+          clear player's inventory
      teleport player to {spawn}
      while player is online:
           if all:
@@ -116,6 +118,11 @@ on join:
                     send action bar "Ram Usage: %free memory%/%max memory%MB" to player
           wait 1 tick
 on quit:
+    if {blockshuffle::alive::*} contains player:
+        set {_loc} to player's location
+        drop items in inventory of player at {_loc}
+        clear player's inventory
+        remove player from {blockshuffle::alive::*}
     set the quit message to "{@prefix} &r&7[&c-&7] %displayname of player%&e Left the game"
     remove player from {dead::*}
     remove player from {alive::*}

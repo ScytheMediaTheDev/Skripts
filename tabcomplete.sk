@@ -10,11 +10,11 @@ on tab complete of "/visibility":
 on tab complete of "/vis":
     set tab completions for position 1 to "a" and "s" and "n"
 on tab complete of "/game":
-    set tab completions for position 1 to "load" and "unload" and "start" and "gui" and "modifiers"
+    set tab completions for position 1 to "load" and "unload" and "start" and "gui" and "modifiers" and "skip" and "revive"
     if tab arg-1 = "load":
         set tab completions for position 2 to "anvildrop" and "icesumo" and "spleef" and "waterdrop" and "trappingkids" and "redrover" and "dripdrop"
-    else if tab arg-1 = "test":
-        set tab completions for position 2 to "test1", "test2" and "test3"
+    else if tab arg-1 = "revive":
+        set tab completions for position 2 to all players
 on tab complete of "/main":
     set tab completions for position 1 to "start"
 on tab complete of "/kit":

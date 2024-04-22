@@ -12,16 +12,16 @@ command /gm <text>:
     permission message: &cYou do not have permission!
     trigger:
         if arg 1 is set:
-            arg 1 is "c" or "creative":
+            arg 1 is "c" or "creative" or "1":
                 set player's gamemode to creative
                 send "{@prefix} &rSet your gamemode to &eCreative"
-            arg 1 is "s" or "survival":
+            arg 1 is "s" or "survival" or "0":
                 set player's gamemode to survival
                 send "{@prefix} &rSet your gamemode to &eSurvival"
-            arg 1 is "a" or "adventure":
+            arg 1 is "a" or "adventure" or "2":
                 set player's gamemode to adventure
                 send "{@prefix} &rSet your gamemode to &eAdventure"
-            arg 1 is "sp" or "spectator":
+            arg 1 is "sp" or "spectator" or "3":
                 set player's gamemode to spectator
                 send "{@prefix} &rSet your gamemode to &eSpectator"
 command /gmc:
