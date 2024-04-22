@@ -67,7 +67,7 @@ function bsGen(p: player, terrain: text, terrainmsg: text):
         set {gamemodifiers::vision::state} to "&8Enabled%nl%&cDisabled"
         set {gamemodifiers::vision} to "false"
     close inventory of {_p}
-    set {startedgame} to "Loasding BlockShuffle"
+    set {startedgame} to "Loading BlockShuffle"
     teleport all players to {spawnSave}
     set {spawn} to {spawnSave}
     set all players' gamemode to adventure
