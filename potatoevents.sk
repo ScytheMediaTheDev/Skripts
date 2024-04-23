@@ -137,7 +137,6 @@ command /game <text> [<string>]:
                 if {startedgame} is not "blockshuffle":
                     execute console command "/rg flag __global__ -w blockshuffle passthrough allow"
                     set {startedgame} to "blockshuffle"
-                    set {startedgame} to "blockshuffle"
                     expand world border of world "blockshuffle" to 1000
                     set {blockshuffle::block} to random element out of all blocks
                     broadcast "&6The block is &e%translate component from {blockshuffle::block}%"
