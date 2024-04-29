@@ -9,4 +9,5 @@ If you already know what to do you can skip the steps below, If not please follo
 5. Go into "plugins/Skript/scripts"
 6. Import the scripts in repo to your mc server!
 
+Note: Some of these skripts will not work as they need variables to work. It may give you an error when loading the skripts. To fix the error just remove the variable parts or change them to your liking.
 If you have any questions please reach @MCdragonmasters or @ScytheMediaTheDev.
