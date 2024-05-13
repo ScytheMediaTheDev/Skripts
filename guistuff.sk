@@ -1,5 +1,5 @@
 options:
-    prefix: &3Event&8 >
+    prefix: &3Server&8 >
     noperm: &cYou do not have permission!
 function lavaGen(p: player, terrain: text, terrainmsg: text):
     set {lavastartable} to "false"
