@@ -8,6 +8,7 @@
 # This is the main file for scyKoth.sk.
 # Do not touch anything in here if you do not know what you are doing.
 # Current scyKoth.sk version 1.0.
+# If you downloaded this file from our github or other platforms please incorporate credits into your server!
 
 # If you need help, you can contact @ScytheMediaTheDev on Github: https://github.com/ScytheMediaTheDev
 
@@ -16,7 +17,7 @@
 
 on load:
 
-	set {scyKoth} to false # Default: (false). This is the main KOTH variable setting this to true mess this skript up a lot!
+	set {scyKoth} to false # Default: (false). This is the main KOTH variable setting this to true mess this scyript up a lot!
 	set {scyKoth.TimeLimit} to 59 # Default: (59). This is how long players will have to wait until they win KOTH! The reason for 59 is because it checks greater than 59 so if we put 60 it would end at 61.
 	if {scyKoth.LOCATION} is not set:
 		set {scyKoth.LOCATION} to the location at 0, 0, 0 of the world "world"
@@ -175,12 +176,12 @@ command koth [<text>] [<text>]:
 
 
 			if arg-2 is "Define":
-				if player has permission "skKoth.Define" or "skKoth.*":
-					set {skKoth.LOCATION} to block at location of player
+				if player has permission "scyKoth.Define" or "scyKoth.*":
+					set {scyKoth.LOCATION} to block at location of player
 					send "{@ServerName} &fA new koth location has successfully been defined!" to player
 					send action bar "{@ServerName} &fA new koth location has successfully been defined!" to player
 
-				else if player does not have permission "skKoth.Define" or "skKoth.*":
+				else if player does not have permission "scyKoth.Define" or "scyKoth.*":
 					send "{@ServerName} {@skNoPerm}" to player
 
 
@@ -194,22 +195,22 @@ command koth [<text>] [<text>]:
 
 every 1 second:
 	loop all players:
-		if {skKoth} is true:
-			if distance between loop-player and {skKoth.LOCATION} is less than 3:
+		if {scyKoth} is true:
+			if distance between loop-player and {scyKoth.LOCATION} is less than 3:
 				wait 1 second
-				add 1 to {skKoth::Timer::%loop-players%}
-				send action bar "&aYou are holding the koth. %{skKoth::Timer::%loop-players%}%/60 Seconds." to loop-players
+				add 1 to {scyKoth::Timer::%loop-players%}
+				send action bar "&aYou are holding the koth. %{scyKoth::Timer::%loop-players%}%/60 Seconds." to loop-players
 
 
 every 1 second:
 	loop all players:
-		if {skKoth} is true:
-			if distance between loop-player and {skKoth.LOCATION} is less than 3:
-				if {skKoth::Timer::%loop-player%} is greater than {skKoth.TimeLimit}:
-					set {skKoth} to false
-					set {skKoth::Timer::%loop-players%} to 0
+		if {scyKoth} is true:
+			if distance between loop-player and {scyKoth.LOCATION} is less than 3:
+				if {scyKoth::Timer::%loop-player%} is greater than {scyKoth.TimeLimit}:
+					set {scyKoth} to false
+					set {scyKoth::Timer::%loop-players%} to 0
 					send title "%loop-player% Just won the koth!" to players
-					give loop-player apple named "&fChange the KOTH winning items in the &3skKoth.sk &ffile! Search for: &3##R23WinItem" # #R23WinItem - This is where you can change the winners price!
+					give loop-player apple named "&fChange the KOTH winning items in the &3scyKoth.sk &ffile! Search for: &3##R23WinItem" # #R23WinItem - This is where you can change the winners prize!
 
 
 
@@ -222,13 +223,13 @@ on inventory click:
 
 
 		if clicked slot is 20:
-			if player has permission "skKoth.Define" or "skKoth.*":
+			if player has permission "scyKoth.Define" or "scyKoth.*":
 				close player's inventory
-				set {skKoth.LOCATION} to block at location of player
+				set {scyKoth.LOCATION} to block at location of player
 				send "{@ServerName} &fA new koth location has successfully been defined!" to player
 				send action bar "{@ServerName} &fA new koth location has successfully been defined!" to player
 
-			else if player does not have permission "skKoth.Define" or "skKoth.*":
+			else if player does not have permission "scyKoth.Define" or "scyKoth.*":
 				send "{@ServerName} {@skNoPerm}" to player
 
 
@@ -236,37 +237,37 @@ on inventory click:
 			loop all players:
 
 				if event-item is green wool:
-					if player has permission "skKoth.Start" or "skKoth.*":
-						if {skKoth} is true:
+					if player has permission "scyKoth.Start" or "scyKoth.*":
+						if {scyKoth} is true:
 							send action bar "{@ServerName} &fThere is already a koth in action!" to player
 
 
-						if {skKoth} is false:
-							set {skKoth::Timer::%loop-players%} to 0
+						if {scyKoth} is false:
+							set {scyKoth::Timer::%loop-players%} to 0
 							wait 0.5 seconds
-							set {skKoth} to true
+							set {scyKoth} to true
 							send title "{@ServerName} &fA new koth has started!" to players
 
 						close player's inventory
 
-					else if player does not have permission "skKoth.Start" or "skKoth.*":
+					else if player does not have permission "scyKoth.Start" or "scyKoth.*":
 						send "{@ServerName} {@skNoPerm}" to player
 
 
 				if event-item is red wool:
-					if player has permission "skKoth.End" or "skKoth.*":
-						if {skKoth} is false:
+					if player has permission "scyKoth.End" or "scyKoth.*":
+						if {scyKoth} is false:
 							send action bar "{@ServerName} &fThere is no koth in action!" to player
 
 
-						if {skKoth} is true:
-							set {skKoth} to false
+						if {scyKoth} is true:
+							set {scyKoth} to false
 							send title "{@ServerName} &fThe koth just ended!" to players
-							set {skKoth::Timer::%loop-players%} to 0
+							set {scyKoth::Timer::%loop-players%} to 0
 
 						close player's inventory
 
-					else if player does not have permission "skKoth.End" or "skKoth.*":
+					else if player does not have permission "scyKoth.End" or "scyKoth.*":
 						send "{@ServerName} {@skNoPerm}" to player
 
 
@@ -275,32 +276,32 @@ on inventory click:
 		if clicked slot is 24:
 			cancel event
 			wait 0.2 seconds
-			set {_skKothGUISS} to chest inventory with 3 rows named "&8&l[ &9&lKOTH &7- &cServer Settings &8&l]"
+			set {_scyKothGUISS} to chest inventory with 3 rows named "&8&l[ &9&lKOTH &7- &cServer Settings &8&l]"
 
-			set {_skKothGUISS.Exit} to red stained glass pane named "&c&lEXIT"
+			set {_scyKothGUISS.Exit} to red stained glass pane named "&c&lEXIT"
 
-			set {_skKothGUISS.Placeholders} to redstone lamp named "&3&lCOMING SOON!"
+			set {_scyKothGUISS.Placeholders} to redstone lamp named "&3&lCOMING SOON!"
 			
-			set {_skKothGUISS.TimeLimit} to hopper named "&3&lTimelimit"
-			set line 1 of lore of {_skKothGUISS.TimeLimit} to ""
-			set line 2 of lore of {_skKothGUISS.TimeLimit} to "&fHere you see information for the ammount..."
-			set line 3 of lore of {_skKothGUISS.TimeLimit} to "&fof time that you need to stand on the KOTH location untill you will win!"
-			set line 4 of lore of {_skKothGUISS.TimeLimit} to "&fThe reason for the time being 59 is because it will detect greater than."
-			set line 5 of lore of {_skKothGUISS.TimeLimit} to ""
-			set line 6 of lore of {_skKothGUISS.TimeLimit} to "&fCurrent KOTH Holding Time: &3%{skKoth.TimeLimit}% &fSeconds"
-			set line 7 of lore of {_skKothGUISS.TimeLimit} to "&fDefault KOTH Holding Time: &359 &fSeconds"
-			set line 8 of lore of {_skKothGUISS.TimeLimit} to ""
+			set {_scyKothGUISS.TimeLimit} to hopper named "&3&lTimelimit"
+			set line 1 of lore of {_scyKothGUISS.TimeLimit} to ""
+			set line 2 of lore of {_scyKothGUISS.TimeLimit} to "&fHere you see information for the ammount..."
+			set line 3 of lore of {_scyKothGUISS.TimeLimit} to "&fof time that you need to stand on the KOTH location untill you will win!"
+			set line 4 of lore of {_scyKothGUISS.TimeLimit} to "&fThe reason for the time being 59 is because it will detect greater than."
+			set line 5 of lore of {_scyKothGUISS.TimeLimit} to ""
+			set line 6 of lore of {_scyKothGUISS.TimeLimit} to "&fCurrent KOTH Holding Time: &3%{scyKoth.TimeLimit}% &fSeconds"
+			set line 7 of lore of {_scyKothGUISS.TimeLimit} to "&fDefault KOTH Holding Time: &359 &fSeconds"
+			set line 8 of lore of {_scyKothGUISS.TimeLimit} to ""
 
 
 
 
-			set slot 13 of {_skKothGUISS} to {_skKothGUISS.TimeLimit}
-			set slot 22 of {_skKothGUISS} to {_skKothGUISS.Exit}
-			set slot 10,11,12,14,15 and 16 of {_skKothGUISS} to {_skKothGUISS.Placeholders}
+			set slot 13 of {_scyKothGUISS} to {_scyKothGUISS.TimeLimit}
+			set slot 22 of {_scyKothGUISS} to {_scyKothGUISS.Exit}
+			set slot 10,11,12,14,15 and 16 of {_scyKothGUISS} to {_scyKothGUISS.Placeholders}
 
 
 
-			open {_skKothGUISS} to player
+			open {_scyKothGUISS} to player
 
 
 		if clicked slot is 40:
