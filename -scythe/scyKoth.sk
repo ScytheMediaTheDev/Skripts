@@ -1,15 +1,3 @@
-#========================================================#
-#           __    __ __        __   __              __   #
-#    _____ / /__ / //_/____   / /_ / /_      _____ / /__ #
-#   / ___// //_// ,<  / __ \ / __// __ \    / ___// //_/ #
-#  (__  )/ ,<  / /| |/ /_/ // /_ / / / /_  (__  )/ ,<    #
-# /____//_/|_|/_/ |_|\____/ \__//_/ /_/(_)/____//_/|_|   #
-#========================================================#
-
-
-
-
-
 #==========================================================#
 # +------------------------------------------------------+ #
 # |                       Notes                          | #
@@ -17,27 +5,27 @@
 #==========================================================#
 
 
-# This is the main file for skKoth.sk.
+# This is the main file for scyKoth.sk.
 # Do not touch anything in here if you do not know what you are doing.
-# Current skKoth.sk version 1.0.
+# Current scyKoth.sk version 1.0.
 
-# If you need help, you can check the AtwoodDEV's GitHub page: https://github.com/AtwoodDEV
+# If you need help, you can contact @ScytheMediaTheDev on Github: https://github.com/ScytheMediaTheDev
 
 
 
 
 on load:
 
-	set {skKoth} to false # Default: (false). This is the main KOTH variable setting this to true will make everything a mess!
-	set {skKoth.TimeLimit} to 59 # Default: (59). This is how long players will have to wait until they win the KOTH! The reason for 59 is because it checks greater than 59 so if we put 60 it would end at 61.
-	if {skKoth.LOCATION} is not set:
-		set {skKoth.LOCATION} to the location at 0, 0, 0 of the world "world"
+	set {scyKoth} to false # Default: (false). This is the main KOTH variable setting this to true mess this skript up a lot!
+	set {scyKoth.TimeLimit} to 59 # Default: (59). This is how long players will have to wait until they win KOTH! The reason for 59 is because it checks greater than 59 so if we put 60 it would end at 61.
+	if {scyKoth.LOCATION} is not set:
+		set {scyKoth.LOCATION} to the location at 0, 0, 0 of the world "world"
 
 
 options:
 	
-	ServerName: &8&l[&r&fskKoth&r&8&l] &r&8&l>> &r
-	skNoPerm: &4&lPermission Denied: &r&cYou do not have the required permissions to access this resource! Please contact your server administrator.&r
+	ServerName: &8&l[&r&fKOTH&r&8&l] &r&8&l>> &r
+	skNoPerm: &4&lPermission Denied: &r&cYou do not have the required perms to access this! Please contact your server administrator.&r
 
 
 
@@ -57,26 +45,26 @@ command koth [<text>] [<text>]:
 
 		if arg-1 is "Help":
 			send "" to player
-			send " &f---- &3Help: skKoth &r&f----" to player
+			send " &f---- &3Help: Koth &r&f----" to player
 			send "&fCommand &3/koth &fusages:" to player
 			send "" to player
 			send "&3/koth info" to player
-			send "&f- Information about the skKoth skript." to player
+			send "&f- Information about the scyKoth skript." to player
 			send "" to player
 			send "&3/koth help" to player
 			send "&f- Displays this help page." to player
 			send "" to player
 			send "&3/koth Admin AdminGUI" to player
-			send "&f- Opens the KOTH AdminGUI." to player
+			send "&f- Opens the KOTH Admin GUI." to player
 
 
 
 		if arg-1 is "Info":
 			send "" to player
-			send "&f-----> &3skKoth Info &f<-----" to player
+			send "&f-----> &3scyKoth Info &f<-----" to player
 			send "" to player
-			send "&6ⓘ &fskKoth is created by: <tooltip:&fClick here to go to AtwoodDEV's github page!><link:https://github.com/AtwoodDEV>&7AtwoodDEV<reset>" to player
-			send "&6ⓘ &fskKoth version: <tooltip:&fThe current version of skKoth>&7V.1.0<reset>" to player
+			send "&6ⓘ &fscyKoth is created by: <tooltip:&fClick here to go to ScytheMediaTheDev's github page!><link:https://github.com/ScytheMediaTheDev<reset>" to player
+			send "&6ⓘ &fscyKoth version: <tooltip:&fThe current version of scyKoth>&7V.1.0<reset>" to player
 			send "" to player
 
 
@@ -84,13 +72,9 @@ command koth [<text>] [<text>]:
 		if arg-1 is "Skripts":
 			send "" to player
 			send "&f-----> &3More Skripts &f<-----" to player
-			send "&f---> &3From AtwoodDEV's &f<---" to player
+			send "&f---> &3From ScytheMediaTheDev's &f<---" to player
 			send "" to player
-			send "<tooltip:&fskDrops - The perfect 2 in 1 skript for your server to restrict accidental drops!><link:https://skripthub.net/scripts/AtwoodDEV/skdrops.341/>&7➸ &3skDrops &8- &fFind it here!<reset>" to player
-			send "<tooltip:&fDirectly download the skDrops skript!><link:https://skripthub.net/api/v1/projectversion/366/download/>&7-- &fDOWNLOAD &3skDrops<reset>" to player
-			send "" to player
-			send "<tooltip:&fskItem - The skript that allows you to restrict dropping of blacklisted items!><link:https://skripthub.net/scripts/AtwoodDEV/skitem.327/>&7➸ &3skItem &8- &fFind it here!<reset>" to player
-			send "<tooltip:&fDirectly download the skItem skript!><link:https://skripthub.net/api/v1/projectversion/349/download/>&7-- &fDOWNLOAD &3skItem<reset>" to player
+			send "&cNone So Far!" to player
 			send "" to player
 
 
@@ -98,94 +82,94 @@ command koth [<text>] [<text>]:
 		if arg-1 is "Admin":
 
 			if arg-2 is "AdminGUI":
-				if player has permission "skKoth.Admin" or "skKoth.*":
+				if player has permission "scyKoth.admin" or "scyKoth.*":
 
 					set {_p} to "%player%" parsed as player
-					set {_skKothGUI} to chest inventory with 5 rows named "&8&l[ &9&lKOTH &7- &cAdmin Panel &8&l]"
+					set {_scyKothGUI} to chest inventory with 5 rows named "&8&l[ &9&lKOTH &7- &cAdmin Panel &8&l]"
 
 
-					set {_skKothGUI.Skull} to head of {_p} named "&fWelcome &3%player%!&f To the &3KOTH &fadmin panel!"
-					set line 1 of lore of {_skKothGUI.Skull} to ""
-					set line 2 of lore of {_skKothGUI.Skull} to "&fThis is the place where you can find information for the skKoth skript."
-					set line 3 of lore of {_skKothGUI.Skull} to ""
+					set {_scyKothGUI.Skull} to head of {_p} named "&fWelcome &3%player%!&f To the &3KOTH &fadmin panel!"
+					set line 1 of lore of {_scyKothGUI.Skull} to ""
+					set line 2 of lore of {_scyKothGUI.Skull} to "&fThis is the place where you can find information for the scyKoth skript."
+					set line 3 of lore of {_scyKothGUI.Skull} to ""
 
-					set {_skKothGUI.Barrier} to red stained glass pane named "&c&lEXIT"
+					set {_scyKothGUI.Barrier} to red stained glass pane named "&c&lEXIT"
 
-					set {_skKothGUI.CmdBlock} to command block named "&4&lSERVER SETTINGS:"
-					set line 1 of lore of {_skKothGUI.CmdBlock} to ""
-					set line 2 of lore of {_skKothGUI.CmdBlock} to "&fTHESE ARE THE DEFAULT SETTINGS FOR THE SERVER!"
-					set line 3 of lore of {_skKothGUI.CmdBlock} to "&fYOU CHANGE THESE IN THE &3skKoth.sk &fFILE!"
-					set line 4 of lore of {_skKothGUI.CmdBlock} to ""
+					set {_scyKothGUI.CmdBlock} to command block named "&4&lSERVER SETTINGS:"
+					set line 1 of lore of {_scyKothGUI.CmdBlock} to ""
+					set line 2 of lore of {_scyKothGUI.CmdBlock} to "&fTHESE ARE THE DEFAULT SETTINGS FOR THE SERVER!"
+					set line 3 of lore of {_scyKothGUI.CmdBlock} to "&fYOU CHANGE THESE IN THE &3scyKoth.sk &fFILE!"
+					set line 4 of lore of {_scyKothGUI.CmdBlock} to ""
 
-					set {_skKothGUI.StartKOTH} to green wool named "&a&lSTART KOTH"
-					set line 1 of lore of {_skKothGUI.StartKOTH} to ""
-					set line 2 of lore of {_skKothGUI.StartKOTH} to "&fStart a game of King of the Hill!"
-					set line 3 of lore of {_skKothGUI.StartKOTH} to ""
+					set {_scyKothGUI.StartKOTH} to green wool named "&a&lSTART KOTH"
+					set line 1 of lore of {_scyKothGUI.StartKOTH} to ""
+					set line 2 of lore of {_scyKothGUI.StartKOTH} to "&fStart a game of King of the Hill!"
+					set line 3 of lore of {_scyKothGUI.StartKOTH} to ""
 
-					set {_skKothGUI.StopKOTH} to red wool named "&c&lEND KOTH"
-					set line 1 of lore of {_skKothGUI.StopKOTH} to ""
-					set line 2 of lore of {_skKothGUI.StopKOTH} to "&fEnd the current game of King of the Hill!"
-					set line 3 of lore of {_skKothGUI.StopKOTH} to ""
+					set {_scyKothGUI.StopKOTH} to red wool named "&c&lEND KOTH"
+					set line 1 of lore of {_scyKothGUI.StopKOTH} to ""
+					set line 2 of lore of {_scyKothGUI.StopKOTH} to "&fEnd the current game of King of the Hill!"
+					set line 3 of lore of {_scyKothGUI.StopKOTH} to ""
 
-					set {_skKothGUI.DefineKOTH} to structure block named "&f&lDEFINE KOTH"
-					set line 1 of lore of {_skKothGUI.DefineKOTH} to ""
-					set line 2 of lore of {_skKothGUI.DefineKOTH} to "&fDefine the new location for the King of the Hill!"
-					set line 3 of lore of {_skKothGUI.DefineKOTH} to ""
+					set {_scyKothGUI.DefineKOTH} to structure block named "&f&lDEFINE KOTH"
+					set line 1 of lore of {_scyKothGUI.DefineKOTH} to ""
+					set line 2 of lore of {_scyKothGUI.DefineKOTH} to "&fDefine the new location for the King of the Hill!"
+					set line 3 of lore of {_scyKothGUI.DefineKOTH} to ""
 
-					set {_skKothGUI.Placeholders} to redstone lamp named "&3&lCOMING SOON!"
-
-
-					set slot 4 of {_skKothGUI} to {_skKothGUI.Skull}
-					set slot 20 of {_skKothGUI} to {_skKothGUI.DefineKOTH}
-					if {skKoth} is false:
-						set slot 22 of {_skKothGUI} to {_skKothGUI.StartKOTH}
-					if {skKoth} is true:
-						set slot 22 of {_skKothGUI} to {_skKothGUI.StopKOTH}
-					set slot 21 and 23 of {_skKothGUI} to {_skKothGUI.Placeholders}
-					set slot 24 of {_skKothGUI} to {_skKothGUI.CmdBlock}
-
-					set slot 40 of {_skKothGUI} to {_skKothGUI.Barrier}
+					set {_scyKothGUI.Placeholders} to redstone lamp named "&3&lCOMING SOON!"
 
 
+					set slot 4 of {_scyKothGUI} to {_scyKothGUI.Skull}
+					set slot 20 of {_scyKothGUI} to {_scyKothGUI.DefineKOTH}
+					if {scyKoth} is false:
+						set slot 22 of {_scyKothGUI} to {_scyKothGUI.StartKOTH}
+					if {scyKoth} is true:
+						set slot 22 of {_scyKothGUI} to {_scyKothGUI.StopKOTH}
+					set slot 21 and 23 of {_scyKothGUI} to {_scyKothGUI.Placeholders}
+					set slot 24 of {_scyKothGUI} to {_scyKothGUI.CmdBlock}
 
-					open {_skKothGUI} to player
+					set slot 40 of {_scyKothGUI} to {_scyKothGUI.Barrier}
 
-				else if player does not have permission "skKoth.Admin" or "skKoth.*":
+
+
+					open {_scyKothGUI} to player
+
+				else if player does not have permission "scyKoth.admin" or "scyKoth.*":
 					send "{@ServerName} {@skNoPerm}" to player
 
 
 
 			if arg-2 is "Start":
-				if player has permission "skKoth.Start" or "skKoth.*":
+				if player has permission "scyKoth.Start" or "scyKoth.*":
 					loop all players:
-						if {skKoth} is true:
+						if {scyKoth} is true:
 							send action bar "{@ServerName} &fThere is already a koth in action!" to player
 
 
-						if {skKoth} is false:
-							set {skKoth::Timer::%loop-players%} to 0
+						if {scyKoth} is false:
+							set {scyKoth::Timer::%loop-players%} to 0
 							wait 0.5 seconds
-							set {skKoth} to true
+							set {scyKoth} to true
 							send title "{@ServerName} &fA new koth has started!" to players
 
-				else if player does not have permission "skKoth.Start" or "skKoth.*":
+				else if player does not have permission "scyKoth.Start" or "scyKoth.*":
 					send "{@ServerName} {@skNoPerm}" to player
 
 
 
 			if arg-2 is "End":
-				if player has permission "skKoth.End" or "skKoth.*":
+				if player has permission "scyKoth.End" or "scyKoth.*":
 					loop all players:
-						if {skKoth} is false:
+						if {scyKoth} is false:
 							send action bar "{@ServerName} &fThere is no koth in action!" to player
 
 
-						if {skKoth} is true:
-							set {skKoth} to false
+						if {scyKoth} is true:
+							set {scyKoth} to false
 							send title "{@ServerName} &fThe koth just ended!" to players
-							set {skKoth::Timer::%loop-players%} to 0
+							set {scyKoth::Timer::%loop-players%} to 0
 
-				else if player does not have permission "skKoth.End" or "skKoth.*":
+				else if player does not have permission "scyKoth.End" or "scyKoth.*":
 					send "{@ServerName} {@skNoPerm}" to player
 
 
