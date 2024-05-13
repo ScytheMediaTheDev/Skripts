@@ -1,5 +1,5 @@
 options:
-    prefix: &3Event&8 
+    prefix: &3Server&8 
 
 
 on tab complete of "/gm":
