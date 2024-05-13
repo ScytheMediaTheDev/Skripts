@@ -1,5 +1,7 @@
 options:
-    prefix: &3Event&8 >
+    prefix: &3Server&8 >
+    cooldown: 2 seconds
+    cooldown message: &cWait a sec before using this command again!
     gameonostart: send "game is not startable"
     noperm: &cYou do not have permission!
 function fivesectimer(p: player):
@@ -20,186 +22,6 @@ function fivesectimer(p: player):
     wait 1 second
     send actionbar "&c&l0" to all players
     play sound "minecraft:block.note_block.pling" for all players
-function gamestart(p: player):
-    clear all players' inventory
-    clear all the potion effects of all players
-command /game <text> [<string>]:
-    permission: potatoevents.game
-    permission message: &cYou do not have permission!
-    trigger:
-        arg 1 is "load":
-            arg 2 is "anvildrop":
-                set {currentgame} to "anvildrop"
-                apply jump boost 200 without particles to all players for 5 minutes
-                gamestart(player)
-                execute console command "/tp @a 112 -56 -36 180 0"
-                set all players' gamemode to adventure
-                set {spawn} to {anvildropspawn}
-                broadcast "{@prefix} &aLoaded Anvildrop"
-            arg 2 is "icesumo":
-                execute console command "/rg flag -w world icesumo pvp deny"
-                set {currentgame} to "icesumo"
-                gamestart(player)
-                set {spawn} to {icesumospawn}
-                wait 1 tick
-                teleport all players to {icesumostart}
-                give all players 1 stick of knockback 2 named "&bThe Stick"
-                set all players' gamemode to survival
-                broadcast "{@prefix} &aLoaded IceSumo"
-            arg 2 is "spleef":
-                execute console command "/rg flag -w world spleef block-break deny"
-                set {currentgame} to "spleef"
-                set {spawn} to {spleefspawn}
-                gamestart(player)
-                execute console command "/setblock -11 -27 -151 minecraft:redstone_block"
-                wait 5 ticks
-                execute console command "/setblock -11 -27 -151 air"
-                wait 5  ticks
-                teleport all players to {spleefstart}
-                give all players 9 of unbreakable netherite shovel of efficiency 5
-                set all players' gamemode to survival
-                broadcast "{@prefix} &aLoaded Spleef"
-            arg 2 is "waterdrop":
-                set {currentgame} to "waterdrop"
-                gamestart(player)
-                teleport all players to {waterdropstart}
-                set all players' gamemode to adventure
-                set {spawn} to {waterdropspawn}
-                broadcast "{@prefix} &aLoaded Waterdrop"
-            arg 2 is "redrover":
-                execute console command "/rg flag -w world redrover pvp deny"
-                set {currentgame} to "redrover"
-                gamestart(player)
-                set {spawn} to {redroverspawn}
-                set all players' gamemode to survival
-                teleport all players to {redroveralive}
-                broadcast "{@prefix} &aLoaded RedRover"
-            arg 2 is "trappingkids":
-                gamestart(player)
-                set {currentgame} to "trappingkids"
-                set {spawn} to {mainspawn}
-                teleport all players to {mainspawn}
-            arg 2 is "dripdrop":
-                if {physics} is "false":
-                    set {physics} to "true"
-                load chunk at location(226,-46,113, world "world")
-                load chunk at location(260,-53,84, world "world")
-                wait 5 ticks
-                set {currentgame} to "dripdrop"
-                gamestart(player)
-                set all players' gamemode to adventure
-                set {spawn} to {dripdropspawn}
-                execute console command "/setblock 259 -52 86 minecraft:redstone_wall_torch[facing=south,lit=true]"
-                wait 5 ticks
-                execute console command "/setblock 259 -52 86 minecraft:air"
-                wait 0.7 seconds
-                if {physics} is "true":
-                    execute console command "/physics"
-                teleport all players to {dripdropstart}
-                broadcast "{@prefix} &aLoaded DripDrop"
-        arg 1 is "unload":
-            set {currentgame} to "unloaded"
-            set {startedgame} to "unloaded"
-            gamestart(player)
-            teleport all players to {spawnSave}
-            set all players' gamemode to adventure
-            set {spawn} to {spawnSave}
-            send "{@prefix} &aGame Unloaded"
-        arg 1 is "start":
-            if {currentgame} is "anvildrop":
-                send "{@prefix} &cThis Game is Not Startable"
-            else if {currentgame} is "icesumo":
-                fivesectimer(player)
-                wait 5 seconds
-                execute console command "/rg flag -w world icesumo pvp allow"
-                send "{@prefix} &a PvP Has Been Enabled" to all players
-            else if {currentgame} is "dripdrop":
-                if {physics} is "true":
-                    set {physics} to false
-                fivesectimer(player)
-                wait 5 seconds
-                execute console command "/physics"
-            else if {currentgame} is "redrover":
-                fivesectimer(player)
-                wait 5 seconds
-                execute console command "/rg flag -w world redrover pvp allow" 
-                send "{@prefix} &a PvP Has Been Enabled" to all players
-            else if {currentgame} is "spleef":
-                fivesectimer(player)
-                wait 5 seconds
-                execute console command "/rg flag -w world spleef block-break allow" 
-                send "{@prefix} &a Block Break Has Been Enabled" to all players
-            else if {currentgame} is "trappingkids":
-                teleport all players to {mainmiddle}
-            else if {currentgame} is "unloaded":
-                send "{@prefix} &cThere is No Loaded Game To Start"
-            else if {currentgame} is "blockshuffle":
-                if {startedgame} is not "blockshuffle":
-                    execute console command "/rg flag __global__ -w blockshuffle passthrough allow"
-                    set {startedgame} to "blockshuffle"
-                    expand world border of world "blockshuffle" to 1000
-                    set {blockshuffle::block} to random element out of all blocks
-                    broadcast "&6The block is &e%translate component from {blockshuffle::block}%"
-                else:
-                    send "{@prefix}&c This Game is already started!"
-            else:
-                send ";c"
-        arg 1 is "skip":
-            if {currentgame} is "blockshuffle":
-                set {blockshuffle::block} to random element out of all blocks
-                broadcast "&6The next block is &e%translate component from {blockshuffle::block}%"
-            else:
-                send "nah"
-        arg 1 is "gui":
-            open chest inventory with 3 rows named "HostGame GUI" to player
-            loop 27 times:
-                set slot loop-value - 1 of player's current inventory to gray stained glass pane named " "
-            set slot 13 of player's current inventory to lava bucket named "&6LavaRising"
-            set slot 14 of player's current inventory to grass block named "&ABlockShuffle"
-            set slot 26 of player's current inventory to red carpet named "&cExit"
-            if player is an op:
-                cancel cooldown
-            
-        arg 1 is "modifiers":
-            open chest inventory with 3 rows named "Game Modifiers" to player
-            loop 27 times:
-                set slot loop-value - 1 of player's current inventory to gray stained glass pane named " "
-            set slot 13 of player's current inventory to popped chorus fruit named mini message from "<rainbow>Random Drops" with lore "%{gamemodifiers::randomdrops::state}%"
-            set slot 12 of player's current inventory to feather named mini message from "<aqua>Double Jump" with lore "%{gamemodifiers::doublejump::state}%"
-            set slot 14 of player's current inventory to stone axe named mini message from "<blue>Starter Tools" with lore "%{gamemodifiers::startertools::state}%"
-            set slot 18 of player's current inventory to trident named mini message from "<bold><aqua>Vision" with lore "%{gamemodifiers::vision::state}%"
-            set slot 26 of player's current inventory to red carpet named "&cExit"
-            if player is an op:
-                cancel cooldown
-        arg 1 is "revive":
-            if {currentgame} is "blockshuffle":
-                if arg 2 parsed as offlineplayer is online:
-                    if {blockshuffle::alive::*} does not contain arg 2 parsed as player:
-                        add arg 2 parsed as player to {blockshuffle::alive::*}
-                        set {_l} to spawn of "blockshuffle" parsed as world
-                        teleport arg 2 parsed as player to {_l}
-                        set {blockshuffle::available} to size of {blockshuffle::alive::*}
-                        if {blockshuffle::available} is not smaller than 2:
-                            remove 1 from {blockshuffle::available}
-                        broadcast "{@prefix}&a%arg-2% has been revived"
-                    else:
-                        send "{@prefix} &cThat player is already alive!"
-                else if arg 2 is "all":
-                    loop all players:
-                        if {blockshuffle::alive::*} does not contain loop-player:
-                            add loop-player to {blockshuffle::alive::*}
-                            teleport arg 2 parsed as player to {_l}
-                        set {_l} to spawn of "blockshuffle" parsed as world
-                        teleport arg 2 parsed as player to {_l}
-                        set {blockshuffle::available} to size of {blockshuffle::alive::*}
-                        if {blockshuffle::available} is not smaller than 2:
-                            remove 1 from {blockshuffle::available}
-                        broadcast "{@prefix}&a%arg-2% has been revived"
-                else:
-                    send "{@prefix}&c That player is not online!"
-                    
-            else:
-                send ";c"
 
 command /visibility <text>:
     aliases: /vis
@@ -225,13 +47,13 @@ command /visibility <text>:
             hide all players from player
             send "{@prefix} &aAll Players Are Now Hidden" to player
 command /setspawn:
-    permission: potatoevents.setspawn
+    permission: scythe.setspawn
     trigger:
         set {spawn} to player's location
         send "{@prefix} &fSet Spawn To &7%x coordinate of {spawn}%&e, &7%y coordinate of {spawn}%&e, &7%z coordinate of {spawn}%"
         play sound "minecraft:block.anvil.use"
 command /spawn:
-    permission: potatoevents.spawn
+    permission: scythe.spawn
     cooldown: 2 seconds
     cooldown message: &cWait a sec before typing /spawn again!
     trigger:
@@ -239,7 +61,7 @@ command /spawn:
         play sound "minecraft:block.note_block.pling"
 
 command /pvp:
-    permission: potatoevents.pvp
+    permission: scythe.pvp
     permission message: &cYou do not have permission!
     trigger:
         if {pvp} is "true":
@@ -253,23 +75,31 @@ command /pvp:
 command /discord:
     aliases: /dc
     trigger:
-        send "%nl%&b&lDiscord:&r Click<link:https://discord.gg/UC6rAmeTUg> &bHERE&r To Join Our &bDiscord Server<reset>%nl%" 
+        send "&cInvite Not Created ;c"
+        stop
+        send "%nl%&b&lDiscord:&r Click<link:https://www.example.com> &bHERE&r To Join Our &bDiscord Server<reset>%nl%" 
         play sound "minecraft:block.note_block.pling"
 command /discord-all:
-    permission: potatoevents.discord-all
+    permission: scythe.discord-all
     permission message: &cYou do not have permission!
     aliases: /dc-all
     trigger:
-        send "%nl%&b&lDiscord:&r Click <link:https://discord.gg/UC6rAmeTUg>&bHERE&r To Join Our &bDiscord Server<reset>%nl%" to all players
+        send "&cInvited Not Created ;c"
+        stop
+        send "%nl%&b&lDiscord:&r Click <link:https://www.example.com>&bHERE&r To Join Our &bDiscord Server<reset>%nl%" to all players
         play sound "minecraft:block.note_block.pling"
 command /scytheiscrazy:
     trigger:
         send "&3Event &8>&a You Found An Easter Egg!"
+        kill player
+        send "&cL BOZO"
 command /staffroom:
-    permission: potatoevents.staffroom
+    permission: scythe.staffroom
     permission message: &cYou do not have permission!
     aliases: /sr
     trigger:
+        send "&cThis command is disabled."
+        stop
         teleport player to {staffroom}
         set player's gamemode to creative
 command /ping [<player>]:
@@ -291,16 +121,20 @@ command /ping [<player>]:
             else:
                 send "{@prefix} &r%arg-1%'s Ping Is &a%player-arg's ping%"
 command /spawnall:
-    permission: potatoevents.game
+    permission: scythe.game
     permission message: &cYou do not have permission!
     trigger:
+        send "&cThis command is disabled."
+        stop
         gamestart(player)
         teleport all players to {spawn}
         set all players' gamemode to adventure
 command /revive <player>:
-    permission: potatoevents.revive
+    permission: scythe.revive
     permission message: &cYou do not have permission!
     trigger:
+        send "&cThis command is disabled."
+        stop
         if {alive::*} contains arg 1:
             send "{@prefix} &r%arg-1% is already alive"
         else:
@@ -309,9 +143,11 @@ command /revive <player>:
             send "{@prefix} &r%arg-1% has been revived" to all players
             teleport arg 1 to player
 command /reviveall:
-    permission: potatoevents.reviveall
+    permission: scythe.reviveall
     permission message: &cYou do not have permission!
     trigger:
+        send "&cThis command is disabled."
+        stop
         clear {alive::*}
         clear {dead::*}
         add all players to {alive::*}
@@ -319,14 +155,20 @@ command /reviveall:
         teleport all players to player
 command /alive-list:
     trigger:
+        send "&cThis command is disabled."
+        stop
         send "{@prefix} &r%{alive::*}%"
 command /alive-count:
     trigger:
+        send "&cThis command is disabled."
+        stop
         send "{@prefix} &r%size of {alive::*}%"
 command /unrevive <player>:
-    permission: potatoevents.unrevive
+    permission: scythe.unrevive
     permission message: &cYou do not have permission!
     trigger:
+        send "&cThis command is disabled."
+        stop
         if {dead::*} contains arg 1:
             send "{@prefix} &r%arg-1% is already dead"
         else:
@@ -334,23 +176,31 @@ command /unrevive <player>:
             add arg 1 to {dead::*}
             send "{@prefix} &r%arg-1% have been unrevived" to all players
 command /unreviveall:
-    permission: potatoevents.unreviveall
+    permission: scythe.unreviveall
     permission message: &cYou do not have permission!
     trigger:
+        send "&cThis command is disabled."
+        stop
         clear {alive::*}
         clear {dead::*}
         add all players to {dead::*}
         send "{@prefix}&rAll Players have been unrevived" to all players
 command /dead-list:
     trigger:
+        send "&cThis command is disabled."
+        stop
         send "{@prefix} &r%{dead::*}%"
 command /dead-count:
     trigger:
+        send "&cThis command is disabled."
+        stop
         send "{@prefix} &r%size of {dead::*}%"
 command /addhost <player>:
-    permission: potatoevents.addhost
+    permission: scythe.addhost
     permission message: &cYou do not have permission!
     trigger:
+        send "&cThis command is disabled."
+        stop
         if {hosts::*} contains arg 1:
             send "{@prefix} &r%arg-1% is already a host"
         else:
@@ -358,9 +208,11 @@ command /addhost <player>:
             execute console command "/lp user %arg-1% permission set group.host"
             send "{@prefix} &r%arg-1% has been made a host"
 command /removehost <player>:
-    permission: potatoevents.removehost
+    permission: scythe.removehost
     permission message: &cYou do not have permission!
     trigger:
+        send "&cThis command is disabled."
+        stop
         if {hosts::*} contains arg 1:
             execute console command "/lp user %arg-1% permission unset group.host"
             remove arg 1 from {hosts::*}
@@ -368,7 +220,7 @@ command /removehost <player>:
         else: 
             send "{@prefix} &r%arg-1% is already not a host"
 command /arrowride:
-    permission: potatoevents.arrowride
+    permission: scythe.arrowride
     permission message: &cYou do not have permission!
     trigger:
         if {arrowride} is "true":
@@ -378,7 +230,7 @@ command /arrowride:
             set {arrowride} to "true"
             send "{@prefix} &rArrow Ride Has Been &aEnabled" to all players
 command /physics:
-    permission: potatoevents.arrowride
+    permission: scythe.arrowride
     permission message: &cYou do not have permission!
     trigger:
         if {physics} is "true":
@@ -389,12 +241,14 @@ command /physics:
             send "{@prefix} &rPhysics Have Been &aEnabled" to all players
 command /pkfinish:
     trigger:
+        send "&cThis command is disabled."
+        stop
         if player is an operator:
             broadcast "{@prefix} &r%player's prefix%%player% &aHas Finished The Parkour!"
             teleport player to {spawn}
             play sound "minecraft:block.note_block.pling"
 command /skin <offlineplayer>:
-    permission: potatoevents.skin
+    permission: scythe.skin
     permission message: &cYou do not have permission!
     trigger:
         arg 1 is not "reset":
@@ -406,15 +260,21 @@ command /skin <offlineplayer>:
 command /hub:
     aliases: /lobby
     trigger:
+        send "&c&lWIP."
+        stop
         if {togglehub}  is "true":
             connect player to "lobby"
         else:
             send "{@prefix} &c/Hub is Currently Disabled"
 command /toggle <text>:
-    permission: potatoevents.toggle
+    permission: scythe.toggle
     permission message: &cYou do not have permission!
     trigger:
+        send "&cThis command is disabled."
+        stop
         arg 1 is "/hub":
+        send "&cThis command is disabled."
+        stop
             if {togglehub} is "true":
                 set {togglehub} to "false"
                 send "{@prefix} &r/Hub Has Been &cDisabled"
@@ -422,6 +282,8 @@ command /toggle <text>:
                 set {togglehub} to "true"
                 send "{@prefix} &r/Hub Has Been &aEnabled"
         arg 1 is "icewater":
+        send "&cThis command is disabled."
+        stop
             if {icewater} is "true":
                 set {icewater} to "false"
                 send "{@prefix} &bIce Water &rHas Been &cDisabled"
@@ -429,6 +291,8 @@ command /toggle <text>:
                 set {icewater} to "true"
                 send "{@prefix} &bIce Water &rHas Been &aEnabled"
         arg 1 is "ramlogging":
+        send "&cThis command is disabled."
+        stop
             if {ramlogging} is "true":
                 set {ramlogging} to "false"
                 send "{@prefix} &cRAM Logging Has Been Disabled"
@@ -436,37 +300,37 @@ command /toggle <text>:
                 set {ramlogging} to "true"
                 send "{@prefix} &aRAM Logging Has Been Enabled"
 command /sudo <player> <text>:
-    permission: potatoevents.sudo
+    permission: scythe.sudo
     permission message: &cYou do not have permission!
     trigger:
         set {_s} to the first 2 characters of arg 2
         if {_s} contains "c:":
             set {_ss} to arg 2
             set {_ss} to last (length of {_ss} - 2) characters of {_ss} 
-            if arg 1 has permission "potatoevents.owner":
+            if arg 1 has permission "scythe.owner":
                 send "dont sudo me fr"
-            else if arg 1 has permission "potatoevents.jamie":
+            else if arg 1 has permission "scythe.jamie":
                 broadcast "%displayname of arg 1%<white>: %coloured {_ss}%"
                 send "&8Making &e%arg-1%&8 say: '&e%{_ss}%&8'"
-            else if arg 1 has permission "potatoevents.coowner":
+            else if arg 1 has permission "scythe.coowner":
                 broadcast "%displayname of arg 1%<white>: %coloured {_ss}%"
                 send "&8Making &e%arg-1%&8 say: '&e%{_ss}%&8'"
-            else if arg 1 has permission "potatoevents.admin":
+            else if arg 1 has permission "scythe.admin":
                 broadcast "%displayname of arg 1%<white>: %coloured {_ss}%"
                 send "&8Making &e%arg-1%&8 say: '&e%{_ss}%&8'"
-            else if arg 1 has permission "potatoevents.member":
+            else if arg 1 has permission "scythe.member":
                 broadcast "%displayname of arg 1%<white>:&7 %{_ss}%"
                 send "&8Making &e%arg-1%&8 say: '&e%{_ss}%&8'"
                 
         else:
-            if arg 1 does not have permission "potatoevents.owner":
+            if arg 1 does not have permission "scythe.owner":
                 make arg 1 execute arg 2
                 send "&8Making &e%arg-1%&8 execute: '&e%arg-2%&8'"
                 send "%arg-1% issued skript command: %arg-2%" to console
             else:
                 send "dont sudo me fr"
 command /doesplayerexist <text>:
-    permission: potatoevents.sudo
+    permission: scythe.sudo
     permission message: &cYou do not have permission!
     trigger:
         http request builder:
@@ -475,25 +339,29 @@ command /doesplayerexist <text>:
             variable: {_var}
         send async request using http client and {_var} and store the response in {_response}
         if {_response} contains "Couldn't find any profile with name":
-            send "doesnt exist"
+            send "Player &a%arg-1%&r doesnt exist"
         else:
             send url of {_var}
             send {_var}
             send {_response}
         #post async request using http client and {_varfr} and store it in {_response}
 command /pdl:
-    permission: potatoevents.pdl
+    permission: scythe.pdl
     permission message: &cYou do not have permission!
     trigger:
+        send "&cThis command is disabled."
+        stop
         teleport player to {pdlspawn}
 command /pdlall:
-    permission: potatoevents.pdl
+    permission: scythe.pdl
     permission message: &cYou do not have permission!
     trigger:
+        send "&cThis command is disabled."
+        stop
         teleport all players to {pdlspawn}
         set {spawn} to {pdlspawn}
-command /build:
-    permission: potatoevents.build
+command /togglebuild:
+    permission: scythe.togglebuild
     permission message: {@noperm}
     trigger:
         if {build} is "true":
@@ -502,8 +370,8 @@ command /build:
         else:
             set {build} to "true"
             send "{@prefix} &aEnabled &eBuild"
-command /flow:
-    permission: potatoevents.flow
+command /toggleflow:
+    permission: scythe.toggleflow
     permission message: {@noperm}
     trigger:
         if {flowing} is "true":
@@ -513,7 +381,7 @@ command /flow:
             set {flowing} to "true"
             send "{@prefix} &7Flowing has been &aEnabled"
 command /gethead <offlineplayer>:
-    permission: potatoevents.gethead
+    permission: scythe.gethead
     permission message: {@noperm}
     aliases: /getskull
     trigger:
@@ -522,15 +390,17 @@ command /colorcodes:
     trigger:
         send "<link:https://minecraft.fandom.com/wiki/Formatting_codes>https://minecraft.fandom.com/wiki/Formatting_codes"
 command /console <text>:
-    permission: potatoevents.console
+    permission: scythe.console
     permission message: {@noperm}
     trigger:
         execute console command arg-text
         send "&8Executing Console Command '%arg-text%'"
 command /freezetag:
-    permission: potatoevents.freezetag
+    permission: scythe.freezetag
     permission message: {@noperm}
     trigger:
+        send "&cThis command is disabled."
+        stop
         clear {freezetagtagger}
         clear {freezetagrunners::*}
         teleport all players to {freezetagpark}
@@ -541,9 +411,11 @@ command /freezetag:
         add {freezetagtagger} to team named "freezetagtagger"
         apply glowing without particles to {freezetagtagger} for 1 day
 command /freezetagend:
-    permission: potatoevents.freezetag
+    permission: scythe.freezetag
     permission message: {@noperm}
     trigger:
+        send "&cThis command is disabled."
+        stop
         remove all players from team named "freezetagrunner"
         remove all players from team named "freezetagtagger"
         remove all players from team named "freezetagfrozen"
@@ -570,9 +442,11 @@ on damage:
     if damage cause is hitting wall while flying or flying into a wall:
         cancel event
 command /hunger:
-    permission: potatoevents.hunger
-    permission message: smth here idk
+    permission: scythe.hunger
+    permission message: {@noperm}
     trigger:
+        send "&cThis command is disabled."
+        stop
         if {hunger} is "false":
             set {hunger} to "true"
             send "hunger &aEnabled"
