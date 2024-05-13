@@ -1,6 +1,6 @@
 every second:
     loop all players:
-        set loop-player's tab list header to "&b&nPotatoEvents&6&b&6&n.&5&nEnder-Zone&6&n.&b&ncom<reset>%nl%%nl% <##fc0703>Potato&3Events %nl%%nl% &7ᴘʟᴀʏᴇʀs : %size of all players% %nl%"
+        set loop-player's tab list header to "&l&b&nscythe&6&b&6&n.&5&nline&6&n.&b&npm<reset>%nl%%nl% <##fc0703>Scythe&3Server %nl%%nl% &7ᴘʟᴀʏᴇʀs : %size of all players% %nl%"
 every 3 seconds:
     if {footert} is "0":
         loop all players:
