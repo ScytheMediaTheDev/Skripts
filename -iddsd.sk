@@ -1,5 +1,5 @@
 command /sethome:
-    permission: potatoevents.home
+    permission: scythesk.home
     trigger:
         if {home::%uuid of player%} is not set:
             set {home::%uuid of player%} to player's location
@@ -7,7 +7,7 @@ command /sethome:
         else:
             send ";c"
 command /home:
-    permission: potatoevents.home
+    permission: scythesk.home
     trigger:
         if {home::%uuid of player%} is set:
             teleport player to {home::%uuid of player%}
@@ -15,7 +15,7 @@ command /home:
         else:
             send ";c"
 command /delhome:
-    permission: potatoevents.home
+    permission: scythesk.home
     trigger:
         if {home::%uuid of player%} is set:
             clear {home::%uuid of player%}
