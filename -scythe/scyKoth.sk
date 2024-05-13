@@ -45,18 +45,7 @@ command koth [<text>] [<text>]:
 	trigger:
 
 		if arg-1 is "Help":
-			send "" to player
-			send " &f---- &3Help: Koth &r&f----" to player
-			send "&fCommand &3/koth &fusages:" to player
-			send "" to player
-			send "&3/koth info" to player
-			send "&f- Information about the scyKoth skript." to player
-			send "" to player
-			send "&3/koth help" to player
-			send "&f- Displays this help page." to player
-			send "" to player
-			send "&3/koth Admin AdminGUI" to player
-			send "&f- Opens the KOTH Admin GUI." to player
+			send "%nl%%nl%&f---- &3Help: Koth &r&f----%nl%&fCommand &3/koth &fusages:%nl%&3/koth info%nl%&f- Information about the scyKoth script.%nl%%nl%&3/koth help%nl%&f- Displays this help page.%nl%%nl%&3/koth Admin AdminGUI%nl%&f- Opens the KOTH Admin GUI."
 
 
 
