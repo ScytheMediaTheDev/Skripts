@@ -1,29 +1,30 @@
 options:
-    prefix: &3Event&8 >
+    prefix: &Server&8 >
     noperm: &cYou do not have permission!
 
 command /tpall:
-    permission: potatoevents.tpall
+    permission: scythe.tpall
     permission message: &cYou do not have permission!
     trigger:
         teleport all players to player
+        send "%bTeleported all players to you!"
 command /gm <text>:
-    permission: potatoevents.gm
+    permission: scythe.gm
     permission message: &cYou do not have permission!
     trigger:
         if arg 1 is set:
             arg 1 is "c" or "creative" or "1":
                 set player's gamemode to creative
-                send "{@prefix} &rSet your gamemode to &eCreative"
+                send "{@prefix} &rSet your gamemode to &bCreative"
             arg 1 is "s" or "survival" or "0":
                 set player's gamemode to survival
-                send "{@prefix} &rSet your gamemode to &eSurvival"
+                send "{@prefix} &rSet your gamemode to &bSurvival"
             arg 1 is "a" or "adventure" or "2":
                 set player's gamemode to adventure
-                send "{@prefix} &rSet your gamemode to &eAdventure"
+                send "{@prefix} &rSet your gamemode to &bAdventure"
             arg 1 is "sp" or "spectator" or "3":
                 set player's gamemode to spectator
-                send "{@prefix} &rSet your gamemode to &eSpectator"
+                send "{@prefix} &rSet your gamemode to &bSpectator"
 command /gmc:
     trigger:
         make player execute command "/gm c"
@@ -37,12 +38,13 @@ command /gmsp:
     trigger:
         make player execute command "/gm sp"
 command /tphere <player>:
-    permission: potatoevents.tphere
+    permission: scythe.tphere
     permission message: &cYou do not have permission!
     trigger:
         teleport arg 1 to player
+        send "Teleported %arg-1% to you!"
 command /mutechat:
-    permission: potatoevents.chatmute
+    permission: scythe.chatmute
     permission message: &cYou do not have permission!
     trigger:
         if {Globalchat} is not set:
@@ -54,32 +56,28 @@ command /mutechat:
             clear {Globalchat}
             broadcast "{@prefix} &aChat unmuted by &l%player%"
 command /kit <text> [<player>]:
-    permission: potatoevents.kit
+    permission: scythe.kit
     permission message: &cYou do not have permission!
     trigger:
-        arg 1 is "redrover":
+        arg 1 is "FullDiamond":
+            send "You have been given the Full Diamond&r kit."
             give arg 2 1 diamond sword
             give arg 2 1 diamond helmet
             give arg 2 1 diamond chestplate
             give arg 2 1 diamond leggings
             give arg 2 1 diamond boots
+        arg 1 is "dev"
+            send "You have been given the &aDeveloper&r kit."
+            give arg 2 1 debug stick
+            give arg 2 1 command block
+            give arg 2 1 barrier
             arg 2 is not set:
                 give player 1 diamond sword
                 give player 1 diamond helmet
                 give player 1 diamond chestplate
                 give player 1 diamond leggings
                 give player 1 diamond boots
-            
-command /tpalive:
-    permission: potatoevents.tpalive
-    permission message: &cYou do not have permission!
-    trigger:
-        teleport {alive::*} to player
-command /tpdead:
-    permission: potatoevents.tpdead
-    permission message: &cYou do not have permission!
-    trigger:
-        teleport {dead::*} to player
+
 command /msg <player> <text>:
     aliases: /message
     trigger:
@@ -111,24 +109,27 @@ command /msgtoggle:
             set {msg%uuid of player%msg} to "true"
             send "{@prefix} &rPrivate Messages Have Been Toggled On" to player
 command /heal [<player>]:
-    permission: potatoevents.heal
+    permission: scythe.heal
     permission message: &cYou do not have permission!
     trigger:
         if arg 1 is not set:
             heal player
             set the player's food level to 20
+            send "You have been healed!"
         else:
             heal arg 1
             set arg 1's food level to 20
+            send "%player% was healed."
 command /healall:
-    permission: potatoevents.heal
+    permission: scythe.heal
     permission message: &cYou do not have permission!
     trigger:
         heal all players
         set the food level of all players to 20
+        send "All players have been healed!"
 command /broadcast <text>:
     aliases: /bc, /bcast
-    permission: potatoevents.braodcast
+    permission: scythe.braodcast
     permission message: &cYou do not have permission!
     trigger:
         send "{@prefix} &r%colored arg 1%"
@@ -136,7 +137,7 @@ command /list:
     trigger:
         send "Players: (%size of players%/%max players%)%nl%%all players%"
 command /setwarp <text> [<text>]:
-    permission: potatoevents.setwarp
+    permission: scythe.setwarp
     permission message: {@noperm}
     trigger:
         if arg 1 is not "help":
@@ -154,7 +155,7 @@ command /setwarp <text> [<text>]:
         else:
             send "{@prefix} &cYou Cannot Set a Warp With That Name"
 command /warp <text>:
-    permission: potatoevents.warp
+    permission: scythe.warp
     permission message: {@noperm}
     trigger:
         if {warps::%arg-1%} is not set:
@@ -162,12 +163,12 @@ command /warp <text>:
         else:
             teleport player to {warps::%arg-1%}
 command /warps:
-    permission: potatoevents.warp
+    permission: scythe.warp
     permission message: {@noperm}
     trigger:
         send "{@prefix} &6Warps:&f %{warp::*}%"
 command /delwarp <text> [<text>]:
-    permission: potatoevents.setwarp
+    permission: scythe.setwarp
     permission message: {@noperm}
     trigger:
         if {warps::%arg-1%} is set:
@@ -182,19 +183,27 @@ command /delwarp <text> [<text>]:
 command //air:
     trigger:
         make player execute command "//set air"
+        send "&bSuccessfully Ran Command"
+            else:
+                send "&cAn Error has Occured. Check &aessentials.sk &b(line 183)"
 command /ci:
-    permission: potatoevents.ci
+    permission: scythe.ci
     permission message: {@noperm}
     trigger:
         clear player's inventory
+        send "&cCleared &a%player%'s&c inventory."
 command /ciall:
-    permission: potatoevents.ci
+    permission: scythe.ci
     permission message: {@noperm}
     trigger:
         clear all players' inventory
+        send "&cCleared all player inventories"
 command /noon:
-    permission: potatoevents.time
+    permission: scythe.time
     permission message: {@noperm}
     aliases: /day
     trigger:
         set time to 12:00
+        send "Set Time Successfully"
+            else:
+                send "&cAn Error Occured. Check &aessentials.sk&b (line 209)"
