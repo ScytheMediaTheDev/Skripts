@@ -11,7 +11,7 @@ options:
 	cooldown: 2 seconds
 	cooldown message: &cWait a sec before using this command again!
 	noperm: &cYou do not have permission!
-	StaffChatPrefix: &7[&cSTAFFCHAT&7]&r
+	StaffchatPrefix: &7[&cSTAFFCHAT&7]&r
 	neutralColor: <##b456d6>
 	offlineColor: <##f75e75>
 	onlineColor: <##91f75e>
@@ -31,8 +31,6 @@ command /playtime <offlineplayer=%player%>:
 			send " &8➥ &7Playtime {@offlineColor}%arg-1's time played%"
 
 on join:
-	UpdatePlayersLevel(player)
-	updateKeyall()
 	if player hasn't played before:
 		add 1 to {UNIQUE}
 		set join message to "&8[<##FF3232>##%{UNIQUE}%&8] &4&lNEW &c%player%"
@@ -155,10 +153,10 @@ command /sc <text>:
         if arg-1 = "toggle":
             if {staffchat::%player's uuid%} = true:
                 set {staffchat::%command sender's uuid%} to false
-                send "{@StaffChatPrefix} Staffchat toggled &coff&8!" to command sender
+                send "{@StaffchatPrefix} Staffchat toggled &coff&8!" to command sender
             if {staffchat::%player's uuid%} = false:
                 set {staffchat::%command sender's uuid%} to true
-                send "{@StaffChatPrefix} Staffchat toggled &aon&8!" to command sender
+                send "{@StaffchatPrefix} Staffchat toggled &aon&8!" to command sender
         else:
             StaffChat(player, arg-1)
 on chat:
