@@ -7,14 +7,14 @@
 #                                             #
 #=============================================#
 options:
-    prefix: &8[<##763aba>Server&8]
-    cooldown: 2 seconds
-    cooldown message: &cWait a sec before using this command again!
-    noperm: &cYou do not have permission!
-	  StaffChatPrefix: &7[&cSTAFFCHAT&7]&r
-	  neutralColor: <##b456d6>
-	  offlineColor: <##f75e75>
-	  onlineColor: <##91f75e>
+	prefix: &8[<##763aba>Server&8]
+	cooldown: 2 seconds
+	cooldown message: &cWait a sec before using this command again!
+	noperm: &cYou do not have permission!
+	StaffChatPrefix: &7[&cSTAFFCHAT&7]&r
+	neutralColor: <##b456d6>
+	offlineColor: <##f75e75>
+	onlineColor: <##91f75e>
 
 command /playtime <offlineplayer=%player%>:
 	trigger:
@@ -51,7 +51,7 @@ on join:
 	send "<command:/rules>&c[Rules-WIP]  <command:/help>&a[Help]  <command:/discord>&9[Discord]" to player
 	loop 3 times:
 		send " "
-	command /spawn [<player>]:
+command /spawn [<player>]:
 	trigger:
 		if metadata tag "combatTag" of player is set:
 			send "&8[&aSpawn&8] &cCan't teleport in combat"
@@ -71,7 +71,7 @@ function TeleportSpawn(p: player):
 	if {-tempInfo::%{_p}'s uuid%::parkourS} is set:
 		clear {-tempInfo::%{_p}'s uuid%::parkourS}
 	
- on respawn:
+on respawn:
 	wait 2 ticks
 	TeleportSpawn(player)
 
@@ -125,8 +125,8 @@ command /hat:
 			send "{@prefix} &7Ohh look at you looking so fancy."
 
 on place of any stained glass block:
-  send "&cThis Block is banned."
-	cancel event
+    send "&cThis Block is banned."
+    cancel event
  
 command /pvptoggle:
 	cooldown: 5 seconds
@@ -144,7 +144,7 @@ command /pvptoggle:
 			if {-tempInfo::%player's uuid%::toggledPvP} is set:
 				clear {-tempInfo::%player's uuid%::toggledPvP}
 
-function StaffChat(p: player, m: message)
+function StaffChat(p: player, m: text):
         send "{@StaffchatPrefix}&f %{_p}% &8»&f &c%{_m}%" to all players where [player input has permission "Staffchat"]
         
 command /sc <text>:
