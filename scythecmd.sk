@@ -1,0 +1,170 @@
+#=============================================#
+#                                             #
+#           Skript By ScytheMedia             #
+#      https://www.youtube.com/@ScytheYT      #
+#                                             #
+#          https://dsc.gg/ScytheSK            #
+#                                             #
+#=============================================#
+options:
+    prefix: &8[<##763aba>Server&8]
+    cooldown: 2 seconds
+    cooldown message: &cWait a sec before using this command again!
+    noperm: &cYou do not have permission!
+	  StaffChatPrefix: &7[&cSTAFFCHAT&7]&r
+	  neutralColor: <##b456d6>
+	  offlineColor: <##f75e75>
+	  onlineColor: <##91f75e>
+
+command /playtime <offlineplayer=%player%>:
+	trigger:
+		if arg-1 is player:
+			send "{@prefix} &7Viewing your playtime,"
+		else:
+			send "{@prefix} &7Viewing {@neutralColor}%arg-1%&7's playtime,"
+		send " &8➥ &7Joined {@neutralColor}%time since arg-1's first login% ago"
+		if arg-1 is online:
+			send " &8➥ &7Time online {@onlineColor}%time since arg-1's last login%"
+			send " &8➥ &7Playtime {@onlineColor}%arg-1's time played%"
+		else:
+			send " &8➥ &7Last Online {@offlineColor}%time since arg-1's last login% ago"
+			send " &8➥ &7Playtime {@offlineColor}%arg-1's time played%"
+
+on join:
+	UpdatePlayersLevel(player)
+	updateKeyall()
+	if player hasn't played before:
+		add 1 to {UNIQUE}
+		set join message to "&8[<##FF3232>##%{UNIQUE}%&8] &4&lNEW &c%player%"
+	else:
+		set join message to "&a+ &8[<##FF3232>%player%&8]"
+	set player's gamemode to survival
+	play sound "ui.toast.in" with volume 5 at pitch 2 to all players
+	send title "<##FF3232>&lWelcome" with subtitle "&7Use &c/help&7 to play" to player
+	wait 2 ticks
+	TeleportSpawn(player)
+	loop 5 times:
+		send " "
+	send "" to player
+	send "&7     <##FF3232>&l&nScythex" to player
+	send ""
+	send "<command:/rules>&c[Rules-WIP]  <command:/help>&a[Help]  <command:/discord>&9[Discord]" to player
+	loop 3 times:
+		send " "
+	command /spawn [<player>]:
+	trigger:
+		if metadata tag "combatTag" of player is set:
+			send "&8[&aSpawn&8] &cCan't teleport in combat"
+			stop
+		if arg 1 is set:
+			if player has permission "sk.spawn.others":
+				TeleportSpawn(arg 1)
+			else:
+				send "&8[&aSpawn&8] &cCan't teleport others to spawn"
+		else:
+			TeleportSpawn(player)
+		
+function TeleportSpawn(p: player):
+	teleport {_p} to {spawnLoc}
+	send action bar "&aTeleported to spawn" to {_p}
+	play sound "block.anvil.hit" to {_p}
+	if {-tempInfo::%{_p}'s uuid%::parkourS} is set:
+		clear {-tempInfo::%{_p}'s uuid%::parkourS}
+	
+ on respawn:
+	wait 2 ticks
+	TeleportSpawn(player)
+
+command /heal:
+	permission: sk.heal
+	cooldown: 3 minutes
+	cooldown message: &7You need to wait &c3 minutes&7 before using this again
+	cooldown bypass: sk.healBypass
+	trigger:
+		heal player
+		send "&7You've been healed"
+command /invsee <player>:
+	permission: sk.invsee
+	trigger:
+		open arg 1's inventory to player 
+command /enderchest [<player>]:
+	aliases: /ec
+	permission: sk.enderchest
+	trigger:
+		if arg 1 is set:
+			if player has permission "sk.enderchest.others":
+				open arg 1's ender chest to the player
+				stop
+		open the player's ender chest to the player
+on hunger meter change:
+	if player has permission "sk.unlimitedFood":
+		set player's food level to 10
+		#set saturation of player to 20
+
+command /fly:
+	permission: sk.fly
+	trigger:
+		if player can fly:
+			disable flight for player
+			send "{@prefix} &7Flight Disabled"
+		else:
+			enable flight for player
+			send "{@prefix} &7Flight Enabled"
+
+command /hat:
+	permission: sk.hat
+	cooldown: 1 second
+	trigger:
+		if player's tool and player's helmet is air:
+			send "{@prefix} &cYou must be holding an item."
+		else:
+			set {_hat} to player's helmet
+			set {_item} to player's tool
+			set player's helmet to {_item}
+			set player's tool to {_hat}
+			send "{@prefix} &7Ohh look at you looking so fancy."
+
+on place of any stained glass block:
+  send "&cThis Block is banned."
+	cancel event
+ 
+command /pvptoggle:
+	cooldown: 5 seconds
+	trigger:
+		metadata tag "combatTag" of player is not set
+		if player's time played <= 30 minutes:
+			if {-tempInfo::%player's uuid%::toggledPvP} is set:
+				send action bar "&7PvP toggled &cOff" to player
+				clear {-tempInfo::%player's uuid%::toggledPvP}
+			else:
+				send action bar "&7PvP toggled &aOn" to player
+				set {-tempInfo::%player's uuid%::toggledPvP} to true
+		else:
+			send action bar "&cCan only be done by newbies" to player
+			if {-tempInfo::%player's uuid%::toggledPvP} is set:
+				clear {-tempInfo::%player's uuid%::toggledPvP}
+
+function StaffChat(p: player, m: message)
+        send "{@StaffchatPrefix}&f %{_p}% &8»&f &c%{_m}%" to all players where [player input has permission "Staffchat"]
+        
+command /sc <text>:
+    aliases: /staffchat
+    permission: Staffchat
+    permission message: &cYou do not have permission...
+    trigger:
+        if arg-1 = "toggle":
+            if {staffchat::%player's uuid%} = true:
+                set {staffchat::%command sender's uuid%} to false
+                send "{@StaffChatPrefix} Staffchat toggled &coff&8!" to command sender
+            if {staffchat::%player's uuid%} = false:
+                set {staffchat::%command sender's uuid%} to true
+                send "{@StaffChatPrefix} Staffchat toggled &aon&8!" to command sender
+        else:
+            StaffChat(player, arg-1)
+on chat:
+    if {staffchat::%player's uuid%} = true:
+        cancel event
+        StaffChat(player, message)
+on load:
+  set {_requirements::*} to bone, gold ingot, bone, bone, diamond_block, bone, bone, gold ingot and bone
+  register new shaped recipe for {_scytheheart} named "&cScythe's Heart" using {_requirements::*} with id "scythe_heart"
