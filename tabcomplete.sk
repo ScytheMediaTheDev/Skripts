@@ -9,12 +9,6 @@ on tab complete of "/visibility":
     set tab completions for position 1 to "all" and "staff" and "none"
 on tab complete of "/vis":
     set tab completions for position 1 to "a" and "s" and "n"
-on tab complete of "/game":
-    set tab completions for position 1 to "load" and "unload" and "start" and "gui" and "modifiers" and "skip" and "revive"
-    if tab arg-1 = "load":
-        set tab completions for position 2 to "anvildrop" and "icesumo" and "spleef" and "waterdrop" and "trappingkids" and "redrover" and "dripdrop"
-    else if tab arg-1 = "revive":
-        set tab completions for position 2 to all players
 on tab complete of "/main":
     set tab completions for position 1 to "start"
 on tab complete of "/kit":
@@ -41,38 +35,3 @@ on command "/bukkit:pl":
     if player is not an op:
         cancel event
         send formatted "&fServer Plugins (1):%nl%<##EE8815>Bukkit Plugins%nl% &8- &aPotatoEventsCore"
-on region enter:
-    if event-region is "obbyrunmiddle":
-        set slot 0 of player to unbreakable bow of punch 2 and infinity 1
-        set slot 8 of player to arrow
-on region exit:
-    if event-region is "obbyrunmiddle":
-        clear inventory of player
-on region enter:
-    if event-region is "spawnsumo":
-        if event-player's gamemode is not creative:
-            set player's gamemode to survival
-        set {pvp} to "true"
-        enable pvp in world "world"
-        if {spawnsumo::*} does not contain player:
-            add player to {spawnsumo::*}
-on region exit:
-    if event-region is "spawnsumo":
-        remove player from {spawnsumo::*}
-        if player's gamemode is survival:
-            set player's gamemode to adventure
-command /sumo:
-    trigger:
-        teleport player to {spawnsumo}
-        play sound "minecraft:block.note_block.bit"
-command /leavesumo:
-    trigger:
-        if {spawnsumo::*} contains player:
-            remove player from {spawnsumo::*}
-            teleport player to {spawn}
-            play sound "minecraft:block.note_block.pling" for player
-        else:
-            send "&cYou are not in sumo!"
-command /halloffame:
-    trigger:
-        teleport player to {hall_of_fame}
